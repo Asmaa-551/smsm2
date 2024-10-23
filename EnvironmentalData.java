@@ -1,4 +1,8 @@
+import java.util.ArrayList;
+
 public abstract class EnvironmentalData implements Comparable<EnvironmentalData> {
+
+    public static ArrayList<String> sortedLocations = new ArrayList<>();
     private String locationName;      // Name of the geographical location
     private double latitude;           // Latitude of the location
     private double longitude;          // Longitude of the location

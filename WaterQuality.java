@@ -22,12 +22,20 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
         this.waterQualityIndex = waterQualityIndex;
     }
 
-    // Implementing DataOperations methods
     @Override
     public void insert(EnvironmentalData data) {
-        if (data instanceof WaterQuality) {
-            waterQualityBST.insert((WaterQuality) data);
-            System.out.println("Inserted water quality data for " + data.getLocationName());
+        if (data instanceof AirQuality) {
+            AirQuality airQualityData = (AirQuality) data;
+            String locationName = airQualityData.getLocationName();
+            int index = Collections.binarySearch(sortedLocations, locationName);
+            if (index >= 0) {
+                AirQuality existingData = (AirQuality) waterQualityBST.searchByLocation(locationName);
+                existingData.setAqi(airQualityData.getAqi());
+            } else {
+                waterQualityBST.insert(airQualityData);
+                System.out.println("Inserted air quality data for " + locationName);
+                sortedLocations.add(-(index + 1), locationName);
+            }
         }
     }
 

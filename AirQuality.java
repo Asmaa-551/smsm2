@@ -1,7 +1,8 @@
-public class AirQuality extends EnvironmentalData implements DataOperations {
-    private int aqi; // Air Quality Index
+import java.util.ArrayList;
+import java.util.Collections;
 
-    // Reference to the BST instance that will store AirQuality objects
+public class AirQuality extends EnvironmentalData implements DataOperations {
+    private int aqi;
     private static EnvironmentalBST airQualityBST = new EnvironmentalBST();
 
 
@@ -24,8 +25,17 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     @Override
     public void insert(EnvironmentalData data) {
         if (data instanceof AirQuality) {
-            airQualityBST.insert((AirQuality) data);
-            System.out.println("Inserted air quality data for " + data.getLocationName());
+            AirQuality airQualityData = (AirQuality) data;
+            String locationName = airQualityData.getLocationName();
+            int index = Collections.binarySearch(sortedLocations, locationName);
+            if (index >= 0) {
+                AirQuality existingData = (AirQuality) airQualityBST.searchByLocation(locationName);
+                existingData.setAqi(airQualityData.getAqi());
+            } else {
+                airQualityBST.insert(airQualityData);
+                System.out.println("Inserted air quality data for " + locationName);
+                sortedLocations.add(-(index + 1), locationName);
+            }
         }
     }
 
