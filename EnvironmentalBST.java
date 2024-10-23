@@ -3,7 +3,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
 
     public EnvironmentalBST(){}
 	public EnvironmentalBST(EnvironmentalData[] array) {
-        for (int i = 0; i < array.length; i++)
+    for (int i = 0; i < array.length; i++)
            insert(array[i]);
     }
 
@@ -13,7 +13,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
 
     private EnvironmentalData searchByLocation(TreeNode<EnvironmentalData> node, String location) {
         if (node == null) {
-            return null; 
+            return null;
         }
 
         EnvironmentalData data = node.element;
@@ -22,11 +22,12 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
             return data; 
         }
 
-        if (location.compareTo(data.getLocationName()) < 0) {
-            return searchByLocation(node.left, location);
-        } else { 
-            return searchByLocation(node.right, location);
+        EnvironmentalData foundData = searchByLocation(node.left, location);
+        if (foundData != null) {
+            return foundData; 
         }
+
+        return searchByLocation(node.right, location); 
     }
 }
 
