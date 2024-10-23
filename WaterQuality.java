@@ -1,58 +1,70 @@
 import java.util.*;
+
 public class WaterQuality extends EnvironmentalData implements DataOperations {
-    private double waterQualityIndex; 
-    private static List<WaterQuality> waterQualityDataList = new ArrayList<>();
+    private double waterQualityIndex; // Water Quality Index
+
+    // Reference to the BST instance that will store WaterQuality objects
+    private static EnvironmentalBST waterQualityBST = new EnvironmentalBST();
+
+    // Constructor
     public WaterQuality(String locationName, double latitude, double longitude, int measurementTimestamp,
                         double waterQualityIndex) {
         super(locationName, latitude, longitude, measurementTimestamp);
         this.waterQualityIndex = waterQualityIndex;
     }
+
+    // Getter and Setter for Water Quality Index
+    public double getWaterQualityIndex() {
+        return waterQualityIndex;
+    }
+
+    public void setWaterQualityIndex(double waterQualityIndex) {
+        this.waterQualityIndex = waterQualityIndex;
+    }
+
     // Implementing DataOperations methods
     @Override
     public void insert(EnvironmentalData data) {
         if (data instanceof WaterQuality) {
-            waterQualityDataList.add((WaterQuality) data);
+            waterQualityBST.insert((WaterQuality) data);
             System.out.println("Inserted water quality data for " + data.getLocationName());
         }
     }
 
     @Override
     public void update(String location, double newValue) {
-        for (WaterQuality waterQuality : waterQualityDataList) {
-            if (waterQuality.getLocationName().equals(location)) {
-                waterQuality.waterQualityIndex = newValue; // Update the water quality index
-                System.out.println("Updated water quality data for " + location);
-                return;
-            }
+        WaterQuality existingData = (WaterQuality) search(location);
+        if (existingData != null) {
+            existingData.setWaterQualityIndex(newValue); // Update the water quality index
+            System.out.println("Updated water quality data for " + location);
+        } else {
+            System.out.println("Location not found for update: " + location);
         }
-        System.out.println("Location not found for update: " + location);
     }
 
     @Override
     public EnvironmentalData search(String location) {
-        for (WaterQuality waterQuality : waterQualityDataList) {
-            if (waterQuality.getLocationName().equals(location)) {
-                System.out.println("Found water quality data for " + location);
-                return waterQuality;
-            }
-        }
-        System.out.println("No data found for location: " + location);
-        return null;
+        // Traverse the BST to find the WaterQuality data based on the location
+        return waterQualityBST.searchByLocation(location);
     }
 
     @Override
     public void delete(String location) {
-        waterQualityDataList.removeIf(waterQuality -> waterQuality.getLocationName().equals(location));
-        System.out.println("Deleted water quality data for " + location);
+        WaterQuality existingData = (WaterQuality) search(location);
+        if (existingData != null) {
+            waterQualityBST.delete(existingData);
+            System.out.println("Deleted water quality data for " + location);
+        } else {
+            System.out.println("Location not found for deletion: " + location);
+        }
     }
 
     @Override
     public void displayAll() {
         System.out.println("Displaying all water quality data:");
-        for (WaterQuality waterQuality : waterQualityDataList) {
-            waterQuality.displayInfo(); 
-        }
-    }   
+        waterQualityBST.inorder(); // Assuming an inorder method exists in WaterQualityBST
+    }
+
     @Override
     public void displayInfo() {
         System.out.println("Water Quality Data for " + getLocationName() + ":");
@@ -71,5 +83,19 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public void updateMeasurement(double newValue) {
         this.waterQualityIndex = newValue;
         System.out.println("Updated measurement value to: " + newValue);
+    }
+
+    @Override
+    public int compareTo(EnvironmentalData o) {
+        if (o instanceof WaterQuality) {
+            WaterQuality other = (WaterQuality) o;
+            return Double.compare(this.waterQualityIndex, other.waterQualityIndex);
+        }
+        return 1; // Default comparison when compared with non-WaterQuality objects
+    }
+
+    @Override
+    public String toString() {
+        return "Location: " + getLocationName() + ", Water Quality Index: " + waterQualityIndex;
     }
 }

@@ -14,7 +14,6 @@ public class testBST {
 		
 		System.out.println("Tree1: "); 
 		tree1.print();
-
 	}
 
 }

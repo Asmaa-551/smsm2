@@ -1,4 +1,4 @@
-public abstract class EnvironmentalData {
+public abstract class EnvironmentalData implements Comparable<EnvironmentalData> {
     private String locationName;      // Name of the geographical location
     private double latitude;           // Latitude of the location
     private double longitude;          // Longitude of the location
@@ -11,6 +11,8 @@ public abstract class EnvironmentalData {
         this.longitude = longitude;
         this.measurementTimestamp = measurementTimestamp;
     }
+    @Override
+    public abstract int compareTo(EnvironmentalData o);
 
     // Getters and Setters
     public String getLocationName() {
@@ -57,4 +59,7 @@ public abstract class EnvironmentalData {
         System.out.println("Coordinates: (" + latitude + ", " + longitude + ")");
         System.out.println("Timestamp: " + measurementTimestamp);
     }
+
+
+
 }
