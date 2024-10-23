@@ -106,4 +106,11 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public String toString() {
         return "City: " + getLocationName() + ", AQI: " + aqi;
     }
+
+    @Override
+    public void displayRankings() {
+        System.out.println("Air Quality Rankings (Best to Worst):");
+        airQualityBST.reverseInorder(airQualityBST.getRoot());  // Assuming BST has reverseInorder method
+    }
+    
 }
