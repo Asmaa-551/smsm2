@@ -1,14 +1,13 @@
-import java.util.*;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Collections;
 public class NoisePollution extends EnvironmentalData implements DataOperations {
-    private double noiseLevel; // Noise level in decibels (dB)
-
-    // Reference to the BST instance that will store NoisePollution objects
-    private static EnvironmentalBST noisePollutionBST = new EnvironmentalBST();
+    private double noiseLevel;
+    public static EnvironmentalBST noisePollutionBST = new EnvironmentalBST();
 
     // Constructor
-    public NoisePollution(String locationName, double latitude, double longitude, int measurementTimestamp,
-                          double noiseLevel) {
+    public NoisePollution(String locationName, double latitude, double longitude, long measurementTimestamp, double noiseLevel) {
         super(locationName, latitude, longitude, measurementTimestamp);
         this.noiseLevel = noiseLevel;
     }
@@ -22,6 +21,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
         this.noiseLevel = noiseLevel;
     }
 
+    // Implementing DataOperations methods
     @Override
     public void insert(EnvironmentalData data) {
         if (data instanceof NoisePollution) {
@@ -52,7 +52,6 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
 
     @Override
     public EnvironmentalData search(String location) {
-        // Traverse the BST to find the NoisePollution data based on the location
         return noisePollutionBST.searchByLocation(location);
     }
 
@@ -70,7 +69,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     @Override
     public void displayAll() {
         System.out.println("Displaying all noise pollution data:");
-        noisePollutionBST.inorder(); // Assuming an inorder method exists in NoisePollutionBST
+        noisePollutionBST.inorder();
     }
 
     @Override
@@ -79,7 +78,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
         System.out.println("  Latitude: " + getLatitude());
         System.out.println("  Longitude: " + getLongitude());
         System.out.println("  Timestamp: " + getMeasurementTimestamp());
-        System.out.println("  Noise Level: " + noiseLevel + " dB");
+        System.out.println("  Noise Level: " + noiseLevel);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     @Override
     public void updateMeasurement(double newValue) {
         this.noiseLevel = newValue;
-        System.out.println("Updated measurement value to: " + newValue);
+        System.out.println("Updated noise level to: " + newValue);
     }
 
     @Override
@@ -99,17 +98,45 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
             NoisePollution other = (NoisePollution) o;
             return Double.compare(this.noiseLevel, other.noiseLevel);
         }
-        return 1; // Default comparison when compared with non-NoisePollution objects
+        return 1; // Default for non-NoisePollution comparisons
     }
 
     @Override
     public String toString() {
-        return "Location: " + getLocationName() + ", Noise Level: " + noiseLevel + " dB";
+        return "City: " + getLocationName() + ", Noise Level: " + noiseLevel;
     }
 
     @Override
     public void displayRankings() {
-    System.out.println("Noise Pollution Rankings (Best to Worst):");
-    noisePollutionBST.reverseInOrder(noisePollutionBST.getRoot());
-}
+        System.out.println("Noise Pollution Rankings (Best to Worst):");
+        noisePollutionBST.reverseInorder(); 
+    }
+    
+    public void restoreSnapshot(int snapshotIndex) {
+        String filename = "noise_copy" + snapshotIndex + ".txt";
+        noisePollutionBST.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    String locationName = parts[0];
+                    double latitude = Double.parseDouble(parts[1]);
+                    double longitude = Double.parseDouble(parts[2]);
+                    long measurementTimestamp = Long.parseLong(parts[3]);
+                    double noiseLevel = Double.parseDouble(parts[4]);
+
+                    NoisePollution noiseData = new NoisePollution(locationName, latitude, longitude, measurementTimestamp, noiseLevel);
+                    noisePollutionBST.insert(noiseData);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveSnapshot(String filename) {
+        noisePollutionBST.saveRotatingSnapshot();
+    }
 }

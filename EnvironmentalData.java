@@ -3,18 +3,19 @@ import java.util.ArrayList;
 public abstract class EnvironmentalData implements Comparable<EnvironmentalData> {
 
     public static ArrayList<String> sortedLocations = new ArrayList<>();
-    private String locationName;      // Name of the geographical location
-    private double latitude;           // Latitude of the location
-    private double longitude;          // Longitude of the location
-    private int measurementTimestamp;  // Timestamp of the measurement
+    private String locationName; // Name of the geographical location
+    private double latitude; // Latitude of the location
+    private double longitude; // Longitude of the location
+    private long measurementTimestamp; // Timestamp of the measurement
 
     // Constructor to initialize common attributes
-    public EnvironmentalData(String locationName, double latitude, double longitude, int measurementTimestamp) {
+    public EnvironmentalData(String locationName, double latitude, double longitude, long measurementTimestamp) {
         this.locationName = locationName;
         this.latitude = latitude;
         this.longitude = longitude;
         this.measurementTimestamp = measurementTimestamp;
     }
+
     @Override
     public abstract int compareTo(EnvironmentalData o);
 
@@ -43,7 +44,7 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
         this.longitude = longitude;
     }
 
-    public int getMeasurementTimestamp() {
+    public long getMeasurementTimestamp() {
         return measurementTimestamp;
     }
 
@@ -63,8 +64,7 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
         System.out.println("Coordinates: (" + latitude + ", " + longitude + ")");
         System.out.println("Timestamp: " + measurementTimestamp);
     }
+
     public abstract void displayRankings();
-
-
 
 }

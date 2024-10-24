@@ -1,13 +1,15 @@
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 
 public class AirQuality extends EnvironmentalData implements DataOperations {
     private int aqi;
-    private static EnvironmentalBST airQualityBST = new EnvironmentalBST();
+    public static EnvironmentalBST airQualityBST = new EnvironmentalBST();
 
 
     // Constructor
-    public AirQuality(String locationName, double latitude, double longitude, int measurementTimestamp, int aqi) {
+    public AirQuality(String locationName, double latitude, double longitude, long measurementTimestamp, int aqi) {
         super(locationName, latitude, longitude, measurementTimestamp);
         this.aqi = aqi;
     }
@@ -97,20 +99,54 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public int compareTo(EnvironmentalData o) {
         if (o instanceof AirQuality) {
             AirQuality other = (AirQuality) o;
-            return Integer.compare(this.aqi, other.aqi);
+            if (this.aqi <= other.aqi) {
+                return -1; // `this` is less than `other`
+            } else if (this.aqi > other.aqi) {
+                return 1; // `this` is greater than `other`
+            }
         }
-        return 1; // Default comparison when compared with non-AirQuality objects
+        return 1; // Default for non-AirQuality comparisons
     }
 
     @Override
     public String toString() {
         return "City: " + getLocationName() + ", AQI: " + aqi;
     }
-
     @Override
     public void displayRankings() {
         System.out.println("Air Quality Rankings (Best to Worst):");
-        airQualityBST.reverseInorder(airQualityBST.getRoot());  // Assuming BST has reverseInorder method
+        airQualityBST.reverseInorder(); 
     }
     
+    public void restoreSnapshot(int snapshotIndex) {
+        String filename = "air_copy" + snapshotIndex + ".txt";
+        airQualityBST.clear();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    String locationName = parts[0];
+                    double latitude = Double.parseDouble(parts[1]);
+                    double longitude = Double.parseDouble(parts[2]);
+                    long measurementTimestamp = Long.parseLong(parts[3]);
+                    int aqi = Integer.parseInt(parts[4]);
+
+                    AirQuality airQualityData = new AirQuality(locationName, latitude, longitude, measurementTimestamp, aqi);
+                    airQualityBST.insert(airQualityData);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public void saveSnapshot(String filename) {
+    airQualityBST.saveRotatingSnapshot();
+    }
+
+
 }

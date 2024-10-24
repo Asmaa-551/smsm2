@@ -227,13 +227,6 @@ public class BST<E extends Comparable<E>> extends AbstractTree<E> {
         list.add(root.element);
         inorder(root.right);
 	}
-	/*Reverse Inorder traversal from a subtree */
-	public void reverseInorder(TreeNode<EnvironmentalData> root) {
-		if (root == null) return;
-		reverseInorder(root.right);
-		System.out.println(root.element);  // Print the node during traversal (this will display the ranking)
-		reverseInorder(root.left);
-	}
 	
  @Override /* More elements for traversing? */
  public boolean hasNext() {
