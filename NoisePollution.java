@@ -139,4 +139,15 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public void saveSnapshot(String filename) {
         noisePollutionBST.saveRotatingSnapshot();
     }
+
+    @Override
+    public void displayCityAndQI() {
+        System.out.println("City and NL Data:");
+        for (EnvironmentalData data : noisePollutionBST) {
+            if (data instanceof AirQuality) {
+                NoisePollution noisePollutionData = (NoisePollution) data;
+                System.out.println("City: " + noisePollutionData.getLocationName() + ", Noise Level: " + noisePollutionData.getNoiseLevel());
+            }
+        }
+    }
 }

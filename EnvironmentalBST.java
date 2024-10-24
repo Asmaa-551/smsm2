@@ -126,7 +126,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
     private void reverseInorder(TreeNode<EnvironmentalData> node) {
         if (node == null) return;
         reverseInorder(node.right);
-        node.element.displayInfo();
+        node.element.displayCityAndQI();
         reverseInorder(node.left);
     }
 }

@@ -66,5 +66,6 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
     }
 
     public abstract void displayRankings();
+    public abstract void displayCityAndQI();
 
 }
