@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -80,8 +78,9 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
         saveSnapshot(airQualityFilename, "AirQuality");
         saveSnapshot(waterQualityFilename, "WaterQuality");
     }
+    
 
-     public void restoreData() {
+    public void restoreData() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Choose the data type to restore (1: Air Quality, 2: Water Quality): ");
@@ -103,8 +102,31 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
             waterQualityData.restoreSnapshot(snapshotIndex);
         } else {
             System.out.println("Invalid choice. Please enter 1 or 2.");
-        }
+        }   
     }
-}
+  
+        public void reverseInOrderTraversal() {
+            reverseInOrderTraversalRec(root);
+        }
+    
+        private void reverseInOrderTraversalRec(TreeNode<EnvironmentalData> node) {
+            if (node != null) {
+                reverseInOrderTraversalRec(node.right);
+                node.element.displayInfo(); 
+                reverseInOrderTraversalRec(node.left);
+            }
+        }
+
+        public void reverseInorder() {
+            reverseInorder(root); 
+        }
+        private void reverseInorder(TreeNode<EnvironmentalData> node) {
+                if (node == null) return;
+                reverseInorder(node.right);
+                System.out.println(node.element); 
+                reverseInorder(node.left);
+        }
+    
+    }
 
 

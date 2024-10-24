@@ -63,6 +63,7 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
         System.out.println("Coordinates: (" + latitude + ", " + longitude + ")");
         System.out.println("Timestamp: " + measurementTimestamp);
     }
+    public abstract void displayRankings();
 
 
 

@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -138,4 +136,10 @@ public void saveSnapshot(String filename) {
     waterQualityBST.saveSnapshot(filename, "WaterQuality");
 }
 
+
+    @Override
+    public void displayRankings() {
+        System.out.println("Water Quality Rankings (Best to Worst):");
+        waterQualityBST.reverseInorder();  
+    }
 }

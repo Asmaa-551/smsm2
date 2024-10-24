@@ -110,6 +110,12 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public String toString() {
         return "City: " + getLocationName() + ", AQI: " + aqi;
     }
+    @Override
+    public void displayRankings() {
+        System.out.println("Air Quality Rankings (Best to Worst):");
+        airQualityBST.reverseInorder(airQualityBST.getRoot());  // Assuming BST has reverseInorder method
+    }
+    
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "air_copy" + snapshotIndex + ".txt";
         airQualityBST.clear(); // Clear existing air quality data before restoring
@@ -138,6 +144,5 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
 public void saveSnapshot(String filename) {
     airQualityBST.saveSnapshot(filename, "AirQuality");
 }
-
 
 }
