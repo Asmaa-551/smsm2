@@ -3,16 +3,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class EnvironmentalBST extends BST<EnvironmentalData>{
+public class EnvironmentalBST extends BST<EnvironmentalData> {
     private AirQuality airQualityData;
     private WaterQuality waterQualityData;
+    private NoisePollution noisePollutionData; // Added for noise pollution
     private static final int MAX_SNAPSHOTS = 3;
     private int currentSnapshotIndex = 0;
 
-    public EnvironmentalBST(){}
-	public EnvironmentalBST(EnvironmentalData[] array) {
-    for (int i = 0; i < array.length; i++)
-           insert(array[i]);
+    public EnvironmentalBST() {}
+
+    public EnvironmentalBST(EnvironmentalData[] array) {
+        for (EnvironmentalData data : array) {
+            insert(data);
+        }
     }
 
     public EnvironmentalData searchByLocation(String location) {
@@ -27,16 +30,17 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
         EnvironmentalData data = node.element;
 
         if (data.getLocationName().equals(location)) {
-            return data; 
+            return data;
         }
 
         EnvironmentalData foundData = searchByLocation(node.left, location);
         if (foundData != null) {
-            return foundData; 
+            return foundData;
         }
 
-        return searchByLocation(node.right, location); 
+        return searchByLocation(node.right, location);
     }
+
     public void saveSnapshot(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             saveSnapshotRec(root, writer);
@@ -61,6 +65,11 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
             writer.write(waterData.getLocationName() + "," + waterData.getLatitude() + "," + waterData.getLongitude() + ","
                     + waterData.getMeasurementTimestamp() + "," + waterData.getWaterQualityIndex());
             writer.newLine();
+        } else if (node.element instanceof NoisePollution) { // Added for noise pollution
+            NoisePollution noiseData = (NoisePollution) node.element;
+            writer.write(noiseData.getLocationName() + "," + noiseData.getLatitude() + "," + noiseData.getLongitude() + ","
+                    + noiseData.getMeasurementTimestamp() + "," + noiseData.getNoiseLevel());
+            writer.newLine();
         }
 
         saveSnapshotRec(node.right, writer);
@@ -74,18 +83,19 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
             filename = "air_copy" + currentSnapshotIndex + ".txt";
         } else if (root != null && root.element instanceof WaterQuality) {
             filename = "water_copy" + currentSnapshotIndex + ".txt";
+        } else if (root != null && root.element instanceof NoisePollution) { // Added for noise pollution
+            filename = "noise_copy" + currentSnapshotIndex + ".txt";
         } else {
-            return; // Do nothing if the root is null or of an unexpected type
+            return;
         }
 
         saveSnapshot(filename);
     }
 
-
     public void restoreData() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Choose the data type to restore (1: Air Quality, 2: Water Quality): ");
+        System.out.println("Choose the data type to restore (1: Air Quality, 2: Water Quality, 3: Noise Pollution): ");
         int choice = scanner.nextInt();
         int snapshotIndex;
 
@@ -102,33 +112,21 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
             airQualityData.restoreSnapshot(snapshotIndex);
         } else if (choice == 2) {
             waterQualityData.restoreSnapshot(snapshotIndex);
+        } else if (choice == 3) { // Added for noise pollution
+            noisePollutionData.restoreSnapshot(snapshotIndex);
         } else {
-            System.out.println("Invalid choice. Please enter 1 or 2.");
-        }   
-    }
-  
-        public void reverseInOrderTraversal() {
-            reverseInOrderTraversalRec(root);
+            System.out.println("Invalid choice. Please enter 1, 2, or 3.");
         }
-    
-        private void reverseInOrderTraversalRec(TreeNode<EnvironmentalData> node) {
-            if (node != null) {
-                reverseInOrderTraversalRec(node.right);
-                node.element.displayInfo(); 
-                reverseInOrderTraversalRec(node.left);
-            }
-        }
-
-        public void reverseInorder() {
-            reverseInorder(root); 
-        }
-        private void reverseInorder(TreeNode<EnvironmentalData> node) {
-                if (node == null) return;
-                reverseInorder(node.right);
-                System.out.println(node.element); 
-                reverseInorder(node.left);
-        }
-    
     }
 
+    public void reverseInorder() {
+        reverseInorder(root);
+    }
 
+    private void reverseInorder(TreeNode<EnvironmentalData> node) {
+        if (node == null) return;
+        reverseInorder(node.right);
+        node.element.displayInfo();
+        reverseInorder(node.left);
+    }
+}

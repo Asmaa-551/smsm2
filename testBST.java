@@ -2,12 +2,9 @@ import java.util.Scanner;
 
 public class testBST {
     
-    private BST environmentalTree;
     private Scanner scanner;
 
-    // Constructor
     public testBST() {
-        environmentalTree = new BST();
         scanner = new Scanner(System.in);
     }
 
