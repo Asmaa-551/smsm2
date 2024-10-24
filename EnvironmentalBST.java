@@ -97,12 +97,20 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
             reverseInOrderTraversalRec(root);
         }
     
-        private void reverseInOrderTraversalRec(TreeNode<EnvironmentalData> node) {
+        void reverseInOrderTraversalRec(TreeNode<EnvironmentalData> node) {
             if (node != null) {
                 reverseInOrderTraversalRec(node.right);
                 node.element.displayInfo(); 
                 reverseInOrderTraversalRec(node.left);
             }
+        }
+        public void reverseInorder(TreeNode<EnvironmentalData> root) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'reverseInorder'");
+        }
+        public void reverseInOrder(TreeNode<EnvironmentalData> root) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'reverseInOrder'");
         }
     }
 

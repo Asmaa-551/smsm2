@@ -106,4 +106,10 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public String toString() {
         return "Location: " + getLocationName() + ", Water Quality Index: " + waterQualityIndex;
     }
+
+    @Override
+    public void displayRankings() {
+        System.out.println("Water Quality Rankings (Best to Worst):");
+        waterQualityBST.reverseInOrder(waterQualityBST.getRoot());  
+    }
 }
