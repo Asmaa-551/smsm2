@@ -37,48 +37,50 @@ public class EnvironmentalBST extends BST<EnvironmentalData>{
 
         return searchByLocation(node.right, location); 
     }
-    public void saveSnapshot(String filename, String dataType) {
+    public void saveSnapshot(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            saveSnapshotRec(root, writer, dataType);
+            saveSnapshotRec(root, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    private void saveSnapshotRec(TreeNode<EnvironmentalData> node, BufferedWriter writer, String dataType) throws IOException {
+
+    private void saveSnapshotRec(TreeNode<EnvironmentalData> node, BufferedWriter writer) throws IOException {
         if (node == null) {
             return;
         }
-        saveSnapshotRec(node.left, writer, dataType);
-        
-        // Customize this depending on the type of EnvironmentalData
-        if (dataType.equals("AirQuality") && node.element instanceof AirQuality) {
+        saveSnapshotRec(node.left, writer);
+
+        if (node.element instanceof AirQuality) {
             AirQuality airData = (AirQuality) node.element;
             writer.write(airData.getLocationName() + "," + airData.getLatitude() + "," + airData.getLongitude() + ","
                     + airData.getMeasurementTimestamp() + "," + airData.getAqi());
             writer.newLine();
-        } else if (dataType.equals("WaterQuality") && node.element instanceof WaterQuality) {
+        } else if (node.element instanceof WaterQuality) {
             WaterQuality waterData = (WaterQuality) node.element;
             writer.write(waterData.getLocationName() + "," + waterData.getLatitude() + "," + waterData.getLongitude() + ","
                     + waterData.getMeasurementTimestamp() + "," + waterData.getWaterQualityIndex());
             writer.newLine();
         }
-    
-        saveSnapshotRec(node.right, writer, dataType);
+
+        saveSnapshotRec(node.right, writer);
     }
+
     public void saveRotatingSnapshot() {
-        // Increment the snapshot index and wrap around
         currentSnapshotIndex = (currentSnapshotIndex % MAX_SNAPSHOTS) + 1;
-    
-        // Construct filenames for air and water quality
-        String airQualityFilename = "air_copy" + currentSnapshotIndex + ".txt";
-        String waterQualityFilename = "water_copy" + currentSnapshotIndex + ".txt";
-    
-        // Save the snapshots
-        saveSnapshot(airQualityFilename, "AirQuality");
-        saveSnapshot(waterQualityFilename, "WaterQuality");
+
+        String filename;
+        if (root != null && root.element instanceof AirQuality) {
+            filename = "air_copy" + currentSnapshotIndex + ".txt";
+        } else if (root != null && root.element instanceof WaterQuality) {
+            filename = "water_copy" + currentSnapshotIndex + ".txt";
+        } else {
+            return; // Do nothing if the root is null or of an unexpected type
+        }
+
+        saveSnapshot(filename);
     }
-    
+
 
     public void restoreData() {
         Scanner scanner = new Scanner(System.in);

@@ -100,11 +100,14 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public int compareTo(EnvironmentalData o) {
         if (o instanceof WaterQuality) {
             WaterQuality other = (WaterQuality) o;
-            return Double.compare(this.waterQualityIndex, other.waterQualityIndex);
+            if (this.waterQualityIndex <= other.waterQualityIndex) {
+                return -1; // `this` is less than or equal to `other`
+            } else {
+                return 1; // `this` is greater than `other`
+            }
         }
         return 1; // Default comparison when compared with non-WaterQuality objects
     }
-
     @Override
     public String toString() {
         return "Location: " + getLocationName() + ", Water Quality Index: " + waterQualityIndex;
@@ -132,9 +135,8 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
             e.printStackTrace();
         }
     }
-public void saveSnapshot(String filename) {
-    waterQualityBST.saveSnapshot(filename, "WaterQuality");
-}
+  public void saveSnapshot(String filename) {
+    waterQualityBST.saveRotatingSnapshot();}
 
 
     @Override

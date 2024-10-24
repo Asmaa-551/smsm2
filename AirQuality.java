@@ -101,9 +101,13 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public int compareTo(EnvironmentalData o) {
         if (o instanceof AirQuality) {
             AirQuality other = (AirQuality) o;
-            return Integer.compare(this.aqi, other.aqi);
+            if (this.aqi <= other.aqi) {
+                return -1; // `this` is less than `other`
+            } else if (this.aqi > other.aqi) {
+                return 1; // `this` is greater than `other`
+            }
         }
-        return 1; // Default comparison when compared with non-AirQuality objects
+        return 1; // Default for non-AirQuality comparisons
     }
 
     @Override
@@ -113,12 +117,12 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     @Override
     public void displayRankings() {
         System.out.println("Air Quality Rankings (Best to Worst):");
-        airQualityBST.reverseInorder(airQualityBST.getRoot());  // Assuming BST has reverseInorder method
+        airQualityBST.reverseInorder(); 
     }
     
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "air_copy" + snapshotIndex + ".txt";
-        airQualityBST.clear(); // Clear existing air quality data before restoring
+        airQualityBST.clear();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -132,7 +136,7 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
                     int aqi = Integer.parseInt(parts[4]);
 
                     AirQuality airQualityData = new AirQuality(locationName, latitude, longitude, measurementTimestamp, aqi);
-                    airQualityBST.insert(airQualityData); // Insert into the AirQuality BST
+                    airQualityBST.insert(airQualityData);
                 }
             }
         } catch (IOException e) {
@@ -141,8 +145,8 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     }
 
 
-public void saveSnapshot(String filename) {
-    airQualityBST.saveSnapshot(filename, "AirQuality");
-}
+    public void saveSnapshot(String filename) {
+    airQualityBST.saveRotatingSnapshot();
+    }
 
 }

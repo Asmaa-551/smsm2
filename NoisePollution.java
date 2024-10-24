@@ -97,11 +97,15 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public int compareTo(EnvironmentalData o) {
         if (o instanceof NoisePollution) {
             NoisePollution other = (NoisePollution) o;
-            return Double.compare(this.noiseLevel, other.noiseLevel);
+            if (this.noiseLevel <= other.noiseLevel) {
+                return -1; // `this` is less than or equal to `other`
+            } else {
+                return 1; // `this` is greater than `other`
+            }
         }
         return 1; // Default comparison when compared with non-NoisePollution objects
     }
-
+    
     @Override
     public String toString() {
         return "Location: " + getLocationName() + ", Noise Level: " + noiseLevel + " dB";
@@ -110,6 +114,6 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     @Override
     public void displayRankings() {
     System.out.println("Noise Pollution Rankings (Best to Worst):");
-    noisePollutionBST.reverseInOrder(noisePollutionBST.getRoot());
+    noisePollutionBST.reverseInorder();
 }
 }
