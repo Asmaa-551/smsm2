@@ -9,10 +9,11 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
 
 
     // Constructor
-    public AirQuality(String locationName, double latitude, double longitude, long measurementTimestamp, int aqi) {
-        super(locationName, latitude, longitude, measurementTimestamp);
+    public AirQuality(String locationName, double latitude, double longitude, int aqi) {
+        super(locationName, latitude, longitude);
         this.aqi = aqi;
     }
+    public AirQuality(){}
 
     // Getter and Setter for AQI
     public int getAqi() {
@@ -29,14 +30,14 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         if (data instanceof AirQuality) {
             AirQuality airQualityData = (AirQuality) data;
             String locationName = airQualityData.getLocationName();
-            int index = Collections.binarySearch(sortedLocations, locationName);
+            int index = Collections.binarySearch(sortedLocationsAir, locationName);
             if (index >= 0) {
                 AirQuality existingData = (AirQuality) airQualityBST.searchByLocation(locationName);
                 existingData.setAqi(airQualityData.getAqi());
             } else {
                 airQualityBST.insert(airQualityData);
                 System.out.println("Inserted air quality data for " + locationName);
-                sortedLocations.add(-(index + 1), locationName);
+                sortedLocationsAir.add(-(index + 1), locationName);
             }
         }
     }
@@ -120,31 +121,35 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "air_copy" + snapshotIndex + ".txt";
-        airQualityBST.clear();
+        airQualityBST.clear(); // Clear existing air quality data before restoring
 
+        // Restore data from the snapshot
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 5) {
+                // Ensure that the parts length matches your save method structure
+                if (parts.length >= 4) { // Adjust to your actual number of attributes
                     String locationName = parts[0];
                     double latitude = Double.parseDouble(parts[1]);
                     double longitude = Double.parseDouble(parts[2]);
-                    long measurementTimestamp = Long.parseLong(parts[3]);
-                    int aqi = Integer.parseInt(parts[4]);
-
-                    AirQuality airQualityData = new AirQuality(locationName, latitude, longitude, measurementTimestamp, aqi);
-                    airQualityBST.insert(airQualityData);
+                    int aqi = Integer.parseInt(parts[3]); // Ensure this matches your saved structure
+    
+                    AirQuality airQualityData = new AirQuality(locationName, latitude, longitude, aqi);
+                    airQualityBST.insert(airQualityData); // Insert into the AirQuality BST
                 }
             }
         } catch (IOException e) {
+            System.out.println("An error occurred while reading the snapshot: " + e.getMessage());
             e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing numeric values from the snapshot: " + e.getMessage());
         }
     }
+    
 
 
-
-    public void saveSnapshot(String filename) {
+    public void saveSnapshot() {
     airQualityBST.saveRotatingSnapshot();
     }
 
@@ -152,6 +157,11 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public void displayCityAndQI() {
         System.out.println("  City: " + getLocationName());
         System.out.println("  Noise Level: " + getAqi());
+    }
+
+    public void displayRankingsReverse() {
+        System.out.println("Water Quality Rankings (Best to Worst):");
+        airQualityBST.inorder();
     }
 
 

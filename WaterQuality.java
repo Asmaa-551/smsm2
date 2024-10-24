@@ -10,11 +10,12 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     private static EnvironmentalBST waterQualityBST = new EnvironmentalBST();
 
     // Constructor
-    public WaterQuality(String locationName, double latitude, double longitude, long measurementTimestamp,
+    public WaterQuality(String locationName, double latitude, double longitude,
                         double waterQualityIndex) {
-        super(locationName, latitude, longitude, measurementTimestamp);
+        super(locationName, latitude, longitude);
         this.waterQualityIndex = waterQualityIndex;
     }
+    public WaterQuality(){}
 
     // Getter and Setter for Water Quality Index
     public double getWaterQualityIndex() {
@@ -30,14 +31,14 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
         if (data instanceof WaterQuality) {
             WaterQuality waterQualityData = (WaterQuality) data;
             String locationName = waterQualityData.getLocationName();
-            int index = Collections.binarySearch(sortedLocations, locationName);
+            int index = Collections.binarySearch(sortedLocationsWater, locationName);
             if (index >= 0) {
                 WaterQuality existingData = (WaterQuality) waterQualityBST.searchByLocation(locationName);
                 existingData.setWaterQualityIndex(waterQualityData.getWaterQualityIndex());
             } else {
                 waterQualityBST.insert(waterQualityData);
                 System.out.println("Inserted water quality data for " + locationName);
-                sortedLocations.add(-(index + 1), locationName);
+                sortedLocationsWater.add(-(index + 1), locationName);
             }
         }
     }
@@ -117,19 +118,18 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "water_copy" + snapshotIndex + ".txt";
         waterQualityBST.clear(); // Clear existing water quality data before restoring
-
+    
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 5) {
+                if (parts.length >= 4) { // Update to match the number of parts written in saveSnapshot
                     String locationName = parts[0];
                     double latitude = Double.parseDouble(parts[1]);
                     double longitude = Double.parseDouble(parts[2]);
-                    long measurementTimestamp = Long.parseLong(parts[3]);
-                    double waterQualityIndex = Double.parseDouble(parts[4]);
-
-                    WaterQuality waterQualityData = new WaterQuality(locationName, latitude, longitude, measurementTimestamp, waterQualityIndex);
+                    double waterQualityIndex = Double.parseDouble(parts[3]);
+    
+                    WaterQuality waterQualityData = new WaterQuality(locationName, latitude, longitude, waterQualityIndex);
                     waterQualityBST.insert(waterQualityData); // Insert into the WaterQuality BST
                 }
             }
@@ -137,8 +137,9 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
             e.printStackTrace();
         }
     }
+    
 
-    public void saveSnapshot(String filename) {
+    public void saveSnapshot() {
         waterQualityBST.saveRotatingSnapshot();
     }
 
@@ -146,6 +147,11 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public void displayRankings() {
         System.out.println("Water Quality Rankings (Best to Worst):");
         waterQualityBST.reverseInorder();
+    }
+
+    public void displayRankingsReverse() {
+        System.out.println("Water Quality Rankings (Best to Worst):");
+        waterQualityBST.inorder();
     }
 
     @Override

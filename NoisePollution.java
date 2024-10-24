@@ -7,10 +7,11 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public static EnvironmentalBST noisePollutionBST = new EnvironmentalBST();
 
     // Constructor
-    public NoisePollution(String locationName, double latitude, double longitude, long measurementTimestamp, double noiseLevel) {
-        super(locationName, latitude, longitude, measurementTimestamp);
+    public NoisePollution(String locationName, double latitude, double longitude, double noiseLevel) {
+        super(locationName, latitude, longitude);
         this.noiseLevel = noiseLevel;
     }
+    public NoisePollution(){}
 
     // Getter and Setter for Noise Level
     public double getNoiseLevel() {
@@ -27,14 +28,14 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
         if (data instanceof NoisePollution) {
             NoisePollution noiseData = (NoisePollution) data;
             String locationName = noiseData.getLocationName();
-            int index = Collections.binarySearch(sortedLocations, locationName);
+            int index = Collections.binarySearch(sortedLocationsNoise, locationName);
             if (index >= 0) {
                 NoisePollution existingData = (NoisePollution) noisePollutionBST.searchByLocation(locationName);
                 existingData.setNoiseLevel(noiseData.getNoiseLevel());
             } else {
                 noisePollutionBST.insert(noiseData);
                 System.out.println("Inserted noise pollution data for " + locationName);
-                sortedLocations.add(-(index + 1), locationName);
+                sortedLocationsNoise.add(-(index + 1), locationName);
             }
         }
     }
@@ -111,32 +112,38 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
         System.out.println("Noise Pollution Rankings (Best to Worst):");
         noisePollutionBST.reverseInorder(); 
     }
-    
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "noise_copy" + snapshotIndex + ".txt";
-        noisePollutionBST.clear();
-
+        noisePollutionBST.clear(); // Clear existing noise pollution data before restoring
+    
+        // Restore data from the snapshot
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 5) {
+                // Validate the number of parts
+                if (parts.length >= 4) { // Ensure this matches the actual attributes saved
                     String locationName = parts[0];
                     double latitude = Double.parseDouble(parts[1]);
                     double longitude = Double.parseDouble(parts[2]);
-                    long measurementTimestamp = Long.parseLong(parts[3]);
-                    double noiseLevel = Double.parseDouble(parts[4]);
-
-                    NoisePollution noiseData = new NoisePollution(locationName, latitude, longitude, measurementTimestamp, noiseLevel);
+                    double noiseLevel = Double.parseDouble(parts[3]); // Adjust as needed
+    
+                    // Create and insert the NoisePollution object
+                    NoisePollution noiseData = new NoisePollution(locationName, latitude, longitude, noiseLevel);
                     noisePollutionBST.insert(noiseData);
+                } else {
+                    System.out.println("Invalid data format in line: " + line);
                 }
             }
         } catch (IOException e) {
+            System.out.println("An error occurred while reading the snapshot: " + e.getMessage());
             e.printStackTrace();
+        } catch (NumberFormatException e) {
+            System.out.println("Error parsing numeric values from the snapshot: " + e.getMessage());
         }
     }
 
-    public void saveSnapshot(String filename) {
+    public void saveSnapshot() {
         noisePollutionBST.saveRotatingSnapshot();
     }
 
@@ -144,5 +151,10 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public void displayCityAndQI() {
         System.out.println("  City: " + getLocationName());
         System.out.println("  Noise Level: " + getNoiseLevel());
+    }
+
+    public void displayRankingsReverse() {
+        System.out.println("Water Quality Rankings (Best to Worst):");
+        noisePollutionBST.inorder();
     }
 }

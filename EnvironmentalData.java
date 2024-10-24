@@ -1,20 +1,28 @@
 import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public abstract class EnvironmentalData implements Comparable<EnvironmentalData> {
 
-    public static ArrayList<String> sortedLocations = new ArrayList<>();
+    public static ArrayList<String> sortedLocationsWater = new ArrayList<>();
+    public static ArrayList<String> sortedLocationsAir = new ArrayList<>();
+    public static ArrayList<String> sortedLocationsNoise = new ArrayList<>();
+
     private String locationName; // Name of the geographical location
     private double latitude; // Latitude of the location
     private double longitude; // Longitude of the location
-    private long measurementTimestamp; // Timestamp of the measurement
+    private String measurementTimestamp; // Timestamp of the measurement
 
     // Constructor to initialize common attributes
-    public EnvironmentalData(String locationName, double latitude, double longitude, long measurementTimestamp) {
+    public EnvironmentalData(String locationName, double latitude, double longitude) {
         this.locationName = locationName;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.measurementTimestamp = measurementTimestamp;
+        this.measurementTimestamp = getFormattedCurrentTimestamp();
     }
+    public EnvironmentalData(){}
 
     @Override
     public abstract int compareTo(EnvironmentalData o);
@@ -44,11 +52,11 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
         this.longitude = longitude;
     }
 
-    public long getMeasurementTimestamp() {
+    public String getMeasurementTimestamp() {
         return measurementTimestamp;
     }
 
-    public void setMeasurementTimestamp(int measurementTimestamp) {
+    public void setMeasurementTimestamp(String measurementTimestamp) {
         this.measurementTimestamp = measurementTimestamp;
     }
 
@@ -67,5 +75,31 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
 
     public abstract void displayRankings();
     public abstract void displayCityAndQI();
+
+    private String getFormattedCurrentTimestamp() {
+        LocalDateTime dateTime = LocalDateTime.now(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return dateTime.format(formatter);
+    }
+
+
+    // Method to convert formatted timestamp back to LocalDateTime for comparison
+    public LocalDateTime getTimestampForComparison() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        try {
+            return LocalDateTime.parse(measurementTimestamp, formatter);
+        } catch (DateTimeParseException e) {
+            // Handle parsing error if needed
+            return null; // or throw an exception, depending on your error handling strategy
+        }
+    }
+
+    // Example method for comparison
+    public boolean isMoreRecentThan(EnvironmentalData other) {
+        LocalDateTime thisTimestamp = this.getTimestampForComparison();
+        LocalDateTime otherTimestamp = other.getTimestampForComparison();
+
+        return thisTimestamp != null && otherTimestamp != null && thisTimestamp.isAfter(otherTimestamp);
+    }
 
 }
