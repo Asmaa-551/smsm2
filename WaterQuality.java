@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class WaterQuality extends EnvironmentalData implements DataOperations {
@@ -7,7 +12,7 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     private static EnvironmentalBST waterQualityBST = new EnvironmentalBST();
 
     // Constructor
-    public WaterQuality(String locationName, double latitude, double longitude, int measurementTimestamp,
+    public WaterQuality(String locationName, double latitude, double longitude, long measurementTimestamp,
                         double waterQualityIndex) {
         super(locationName, latitude, longitude, measurementTimestamp);
         this.waterQualityIndex = waterQualityIndex;
@@ -106,4 +111,31 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public String toString() {
         return "Location: " + getLocationName() + ", Water Quality Index: " + waterQualityIndex;
     }
+    public void restoreSnapshot(int snapshotIndex) {
+        String filename = "water_copy" + snapshotIndex + ".txt";
+        waterQualityBST.clear(); // Clear existing water quality data before restoring
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length >= 5) {
+                    String locationName = parts[0];
+                    double latitude = Double.parseDouble(parts[1]);
+                    double longitude = Double.parseDouble(parts[2]);
+                    long measurementTimestamp = Long.parseLong(parts[3]);
+                    int waterQualityIndex = Integer.parseInt(parts[4]);
+
+                    WaterQuality waterQualityData = new WaterQuality(locationName, latitude, longitude, measurementTimestamp, waterQualityIndex);
+                    waterQualityBST.insert(waterQualityData); // Insert into the WaterQuality BST
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+public void saveSnapshot(String filename) {
+    waterQualityBST.saveSnapshot(filename, "WaterQuality");
+}
+
 }
