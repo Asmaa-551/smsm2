@@ -106,4 +106,10 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public String toString() {
         return "Location: " + getLocationName() + ", Noise Level: " + noiseLevel + " dB";
     }
+
+    @Override
+    public void displayRankings() {
+    System.out.println("Noise Pollution Rankings (Best to Worst):");
+    noisePollutionBST.reverseInOrder(noisePollutionBST.getRoot());
+}
 }
