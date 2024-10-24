@@ -150,13 +150,8 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
 
     @Override
     public void displayCityAndQI() {
-        System.out.println("City and AQI Data:");
-        for (EnvironmentalData data : airQualityBST) {
-            if (data instanceof AirQuality) {
-                AirQuality airQualityData = (AirQuality) data;
-                System.out.println("City: " + airQualityData.getLocationName() + ", AQI: " + airQualityData.getAqi());
-            }
-        }
+        System.out.println("  City: " + getLocationName());
+        System.out.println("  Noise Level: " + getAqi());
     }
 
 

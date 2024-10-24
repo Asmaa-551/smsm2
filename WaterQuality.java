@@ -150,12 +150,7 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
 
     @Override
     public void displayCityAndQI() {
-        System.out.println("City and WQI Data:");
-        for (EnvironmentalData data : waterQualityBST) {
-            if (data instanceof AirQuality) {
-                WaterQuality waterQualityData = (WaterQuality) data;
-                System.out.println("City: " + waterQualityData.getLocationName() + ", Water Quality Index: " + waterQualityData.getWaterQualityIndex());
-            }
-        }
+        System.out.println("  City: " + getLocationName());
+        System.out.println("  Noise Level: " + getWaterQualityIndex());
     }
 }

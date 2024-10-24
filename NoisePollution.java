@@ -142,12 +142,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
 
     @Override
     public void displayCityAndQI() {
-        System.out.println("City and NL Data:");
-        for (EnvironmentalData data : noisePollutionBST) {
-            if (data instanceof AirQuality) {
-                NoisePollution noisePollutionData = (NoisePollution) data;
-                System.out.println("City: " + noisePollutionData.getLocationName() + ", Noise Level: " + noisePollutionData.getNoiseLevel());
-            }
-        }
+        System.out.println("  City: " + getLocationName());
+        System.out.println("  Noise Level: " + getNoiseLevel());
     }
 }
