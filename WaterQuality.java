@@ -5,6 +5,8 @@ import java.util.*;
 
 public class WaterQuality extends EnvironmentalData implements DataOperations {
     private double waterQualityIndex; // Water Quality Index
+     private List<Double> waterQualityIndexHistory;
+     private List<Date> timestampHistory;
 
     // Reference to the BST instance that will store WaterQuality objects
     private static EnvironmentalBST waterQualityBST = new EnvironmentalBST();
@@ -14,6 +16,9 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
                         double waterQualityIndex) {
         super(locationName, latitude, longitude);
         this.waterQualityIndex = waterQualityIndex;
+        this.waterQualityIndexHistory = new ArrayList<>();
+        this.timestampHistory = new ArrayList<>();
+        recordWaterQualityIndex(waterQualityIndex);
     }
     public WaterQuality(){}
 
@@ -158,5 +163,17 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public void displayCityAndQI() {
         System.out.println("  City: " + getLocationName());
         System.out.println("  Noise Level: " + getWaterQualityIndex());
+    }
+
+    public void recordWaterQualityIndex(double waterQualityIndex) {
+        this.waterQualityIndexHistory.add(waterQualityIndex);
+        this.timestampHistory.add(new Date()); // Store the current time
+    }
+    public List<Double> getWaterQualityIndexHistory() {
+        return waterQualityIndexHistory;
+    }
+
+    public List<Date> getTimestampHistory() {
+        return timestampHistory;
     }
 }

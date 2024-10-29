@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class EnvironmentalBST extends BST<EnvironmentalData> {
     private AirQuality airQualityData;
@@ -212,6 +214,22 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         inorder(root.left);
         System.out.print("(" + root.element + ") ");
         inorder(root.right);
+    }
+
+    public List<EnvironmentalData> getAllData() {
+        List<EnvironmentalData> dataList = new ArrayList<>();
+        collectAllData(root, dataList); // Call the helper method to populate dataList
+        return dataList; // Return the populated list
+    }
+
+    // Helper method to perform in-order traversal and collect all data
+    private void collectAllData(TreeNode<EnvironmentalData> node, List<EnvironmentalData> dataList) {
+        if (node == null) {
+            return; // Base case: if the node is null, return
+        }
+        collectAllData(node.left, dataList); // Traverse left subtree
+        dataList.add(node.element); // Add the current node's data to the list
+        collectAllData(node.right, dataList); // Traverse right subtree
     }
    
 }

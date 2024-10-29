@@ -2,14 +2,22 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 public class NoisePollution extends EnvironmentalData implements DataOperations {
     private double noiseLevel;
     public static EnvironmentalBST noisePollutionBST = new EnvironmentalBST();
+    private List<Double> noiseLevelHistory; // List to store historical noise levels
+    private List<Date> timestampHistory; // List to store corresponding timestamps
 
     // Constructor
     public NoisePollution(String locationName, double latitude, double longitude, double noiseLevel) {
         super(locationName, latitude, longitude);
         this.noiseLevel = noiseLevel;
+        this.noiseLevelHistory = new ArrayList<>();
+        this.timestampHistory = new ArrayList<>();
+        recordNoiseLevel(noiseLevel); // Record initial noise level
     }
     public NoisePollution(){}
 
@@ -156,5 +164,17 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public void displayRankingsReverse() {
         System.out.println("Water Quality Rankings (Best to Worst):");
         noisePollutionBST.inorder();
+    }
+
+    public void recordNoiseLevel(double noiseLevel) {
+        this.noiseLevelHistory.add(noiseLevel);
+        this.timestampHistory.add(new Date()); // Store the current time
+    }
+    public List<Double> getNoiseLevelHistory() {
+        return noiseLevelHistory;
+    }
+
+    public List<Date> getTimestampHistory() {
+        return timestampHistory;
     }
 }

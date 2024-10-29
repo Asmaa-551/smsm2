@@ -2,16 +2,24 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class AirQuality extends EnvironmentalData implements DataOperations {
     private int aqi;
     public static EnvironmentalBST airQualityBST = new EnvironmentalBST();
+    private List<Double> aqiHistory; // List to store historical AQI values
+    private List<Date> timestampHistory; // List to store corresponding timestamps
 
 
     // Constructor
     public AirQuality(String locationName, double latitude, double longitude, int aqi) {
         super(locationName, latitude, longitude);
         this.aqi = aqi;
+        this.aqiHistory = new ArrayList<>();
+        this.timestampHistory = new ArrayList<>();
+        recordAQI(aqi); // Record initial AQI value
     }
     public AirQuality(){}
 
@@ -164,5 +172,16 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         airQualityBST.inorder();
     }
 
+    public void recordAQI(double aqi) {
+        this.aqiHistory.add(aqi);
+        this.timestampHistory.add(new Date()); // Store the current time
+    }
+    public List<Double> getAqiHistory() {
+        return aqiHistory;
+    }
 
+    public List<Date> getTimestampHistory() {
+        return timestampHistory;
+    }
 }
+
