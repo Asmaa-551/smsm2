@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
 
 public class testBST {
     
@@ -13,7 +15,6 @@ public class testBST {
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-
             // Validate input for choice
             while (!scanner.hasNextInt()) {
                 System.out.println("Invalid input. Please enter a number.");
@@ -43,6 +44,9 @@ public class testBST {
                 case 7:
                     restoreData();
                     break;
+                case 8:
+                    visualizeEnvironmentalData(); 
+                    break;
                 case 0:
                     System.out.println("Exiting...");
                     break;
@@ -63,7 +67,7 @@ public class testBST {
         System.out.println("5. Display environmental rankings (Best to Worst)");
         System.out.println("6. Display environmental rankings (Worst to Best)");
         System.out.println("7. Backup data");
-        System.out.println("8. Restore data from backup");
+        System.out.println("8. Visulazie environmental data");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
 	}
@@ -470,7 +474,8 @@ public class testBST {
         System.out.println("1: Air Quality");
         System.out.println("2: Water Quality");
         System.out.println("3: Noise Pollution");
-        System.out.print("Enter your choice (1, 2, or 3): ");
+        System.out.println("4. Display Histogram for AQI");
+        System.out.print("Enter your choice : ");
         
         int choice = scanner.nextInt();
     
@@ -492,6 +497,11 @@ public class testBST {
                     noiseClass.saveSnapshot(); // Save the snapshot
                     System.out.println("Noise Pollution data backed up successfully.");
                 break;
+
+            case 4:
+                double[] aqiValues = getAQIValuesForHistogram(); 
+                VisualData.displayHistogram("Air Quality Index Histogram", aqiValues);
+                break;
     
             default:
                 System.out.println("Invalid choice. Please enter 1, 2, or 3.");
@@ -501,8 +511,51 @@ public class testBST {
         scanner.close(); // Close the scanner to prevent resource leaks
     }
 
+    private static double[] getAQIValuesForHistogram() {
+        List<EnvironmentalData> allData = BST.getAllData();
+        List<Double> aqiValues = new ArrayList<>();
+
+        for (EnvironmentalData data : allData) {
+            if (data instanceof AirQuality) {
+                AirQuality airData = (AirQuality) data;
+                aqiValues.addAll(airData.getAqiHistory());
+            }
+        }
+
+        double[] aqiArray = new double[aqiValues.size()];
+        for (int i = 0; i < aqiValues.size(); i++) {
+            aqiArray[i] = aqiValues.get(i);
+        }
+
+        return aqiArray;
+    }
+
     // Method for restoring data from backup
     public static void restoreData() {
         BST.restoreData();
+    }
+
+    public static void visualizeEnvironmentalData() {
+        System.out.println("Select the type of data to visualize:");
+        System.out.println("1. Air Quality Trends");
+        System.out.println("2. Water Quality Trends");
+        System.out.println("3. Noise Pollution Trends");
+        
+        int choice = scanner.nextInt(); // Get user input for data type
+        
+        switch (choice) {
+            case 1:
+                VisualData.visualizeAirQualityTrends(); // Visualize air quality data
+                break;
+            case 2:
+                VisualData.visualizeWaterQualityTrends(); // Visualize water quality data
+                break;
+            case 3:
+                VisualData.visualizeNoisePollutionTrends(); // Visualize noise pollution data
+                break;
+            default:
+                System.out.println("Invalid choice. Please select 1, 2, or 3."); // Handle invalid input
+                break;
+        }
     }
 }
