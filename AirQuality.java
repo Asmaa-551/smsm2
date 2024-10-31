@@ -185,6 +185,10 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public List<Date> getTimestampHistory() {
         return timestampHistory;
     }
+    public void print() {
+        System.out.println("Air Quality Data Tree:");
+        airQualityBST.print("", airQualityBST.getRoot(), false);
+    }
     public void deleteOldData() {
         LocalDateTime now = LocalDateTime.now();
         Duration maxAge = Duration.ofDays(30); // Duration set to 30 days

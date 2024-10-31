@@ -178,6 +178,10 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public List<Date> getTimestampHistory() {
         return timestampHistory;
     }
+    public void print() {
+        System.out.println("Water Quality Data Tree:");
+        waterQualityBST.print("", waterQualityBST.getRoot(), false);
+    }
     public void deleteOldData() {
         LocalDateTime now = LocalDateTime.now();
         Duration maxAge = Duration.ofDays(30); // Duration set to 30 days

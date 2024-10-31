@@ -179,6 +179,10 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public List<Date> getTimestampHistory() {
         return timestampHistory;
     }
+        public void print() {
+        System.out.println("Noise Pollution Data Tree:");
+        noisePollutionBST.print("", noisePollutionBST.getRoot(), false);
+        }
 
     public void deleteOldData() {
         LocalDateTime now = LocalDateTime.now();
