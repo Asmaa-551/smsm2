@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.time.Duration;
 
 public class WaterQuality extends EnvironmentalData implements DataOperations {
     private double waterQualityIndex; // Water Quality Index
@@ -180,4 +182,32 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
         System.out.println("Water Quality Data Tree:");
         waterQualityBST.print("", waterQualityBST.getRoot(), false);
     }
+    public void deleteOldData() {
+        LocalDateTime now = LocalDateTime.now();
+        Duration maxAge = Duration.ofDays(30); // Duration set to 30 days
+        List<String> oldLocations = new ArrayList<>(); // To store locations of old data
+
+        // Traverse each location in sortedLocationsWater
+        for (String location : sortedLocationsWater) {
+            WaterQuality data = (WaterQuality) waterQualityBST.searchByLocation(location);
+            if (data != null) {
+                LocalDateTime dataTimestamp = data.getTimestampForComparison();
+                // Check if data is older than maxAge
+                if (dataTimestamp != null && Duration.between(dataTimestamp, now).compareTo(maxAge) > 0) {
+                    oldLocations.add(location); // Collect old data for removal
+                }
+            }
+        }
+
+        // Remove old data from both the BST and sorted locations
+        for (String location : oldLocations) {
+            WaterQuality data = (WaterQuality) waterQualityBST.searchByLocation(location);
+            if (data != null) {
+                waterQualityBST.delete(data); // Delete from BST
+                sortedLocationsWater.remove(location); // Remove from sorted list
+                System.out.println("Deleted old data for location: " + location);
+            }
+        }
+    }
 }
+

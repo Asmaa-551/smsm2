@@ -61,9 +61,9 @@ public class testBST {
         System.out.println("2. Update existing environmental data");
         System.out.println("3. Delete environmental data");
         System.out.println("4. Search for specific environmental data");
-        System.out.println("5. Display environmental rankings (Best to Worst)");
-        System.out.println("6. Display environmental rankings (Worst to Best)");
-        System.out.println("7. Backup data");
+        System.out.println("5. Display Rankings");
+        System.out.println("6. Backup data");
+        System.out.println("7. Restore data");
         System.out.println("8. Visulazie environmental data");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
@@ -226,8 +226,17 @@ public class testBST {
         String locationName = scanner.nextLine().trim();
     
         // Search for existing data based on location name
-        EnvironmentalData existingData = BST.searchByLocation(locationName);
-    
+        EnvironmentalData existingData;
+        if (choice == 1) {
+            existingData = airClass.search(locationName);
+        } else if (choice == 2) {
+            existingData = waterClass.search(locationName);
+        } else if (choice == 3) {
+            existingData = noiseClass.search(locationName);
+        } else {
+            System.out.println("Invalid choice.");
+            return;
+        }    
         if (existingData == null) {
             // If no existing data found, ask user if they want to add it
             System.out.println("No existing data found for " + locationName + ".");
@@ -326,9 +335,27 @@ public class testBST {
             }
         }
     }
-
-    // Method for deleting environmental data
     public static void deleteData() {
+        System.out.println("Do you want to:");
+        System.out.println("1. Delete a specific environmental data entry");
+        System.out.println("2. Remove all old environmental data");
+        
+        int deleteChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+    
+        switch (deleteChoice) {
+            case 1:
+                deleteDataSpecific();
+                break;
+            case 2:
+                removeAllOldData();
+                break;
+            default:
+                System.out.println("Invalid choice. Please select a valid option.");
+        }
+    }
+    // Method for deleting environmental data
+    public static void deleteDataSpecific() {
         Scanner scanner = new Scanner(System.in);
         
         // Prompt the user to select the type of data to delete
@@ -382,6 +409,19 @@ public class testBST {
             default:
                 System.out.println("Invalid choice. Please select a valid type of environmental data.");
                 break;
+        }
+    }
+    private static void removeAllOldData() {
+        System.out.println("Are you sure you want to remove all old environmental data? (yes/no)");
+        String confirmation = scanner.nextLine().trim().toLowerCase();
+    
+        if (confirmation.equals("yes")) {
+            // Clear data from each class
+            airClass.deleteOldData(); 
+            waterClass.deleteOldData(); 
+            noiseClass.deleteOldData(); 
+            } else {
+            System.out.println("No data was removed.");
         }
     }
 
