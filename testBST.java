@@ -19,10 +19,9 @@ public class testBST {
         System.out.println("2. Update existing environmental data");
         System.out.println("3. Delete environmental data");
         System.out.println("4. Search for specific environmental data");
-        System.out.println("5. Display environmental rankings (Best to Worst)");
-        System.out.println("6. Display environmental rankings (Worst to Best)");
-        System.out.println("7. Backup data");
-        System.out.println("8. Restore data from backup");
+        System.out.println("5. Display Rnkings");
+        System.out.println("6. Backup data");
+        System.out.println("7. Restore data from backup");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
     }
