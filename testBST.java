@@ -92,8 +92,6 @@ public class testBST {
             return;
         }
     
-        // Initialize the BST and environmental data object based on the selection
-        EnvironmentalBST bstToUse = null; // BST for the selected environmental data
         EnvironmentalData existingData = null; // To hold existing data if found
         
         switch (typeChoice) {
@@ -154,7 +152,7 @@ public class testBST {
                 // Air Quality data with validation
                 int aqi = getValidatedIntInput(scanner, "Air Quality Index (0 to 500)", 0, 500);
                 AirQuality airData = new AirQuality(locationName, latitude, longitude, aqi);
-                bstToUse.insert(airData); // Insert into the Air Quality BST
+                airClass.insert(airData); // Insert into the Air Quality BST
                 System.out.println("Air Quality data inserted successfully!");
                 break;
     
@@ -162,7 +160,7 @@ public class testBST {
                 // Water Quality data with validation
                 int wqi = getValidatedIntInput(scanner, "Water Quality Index (0 to 100)", 0, 100);
                 WaterQuality waterData = new WaterQuality(locationName, latitude, longitude, wqi);
-                bstToUse.insert(waterData); // Insert into the Water Quality BST
+                waterClass.insert(waterData); // Insert into the Water Quality BST
                 System.out.println("Water Quality data inserted successfully!");
                 break;
     
@@ -170,7 +168,7 @@ public class testBST {
                 // Noise Pollution data with validation
                 double noiseLevel = getValidatedDoubleInput(scanner, "Noise Level in decibels (0.0 to 200.0)", 0.0, 200.0);
                 NoisePollution noiseData = new NoisePollution(locationName, latitude, longitude, noiseLevel);
-                bstToUse.insert(noiseData); // Insert into the Noise Pollution BST
+                noiseClass.insert(noiseData); // Insert into the Noise Pollution BST
                 System.out.println("Noise Pollution data inserted successfully!");
                 break;
         }
