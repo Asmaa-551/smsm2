@@ -94,6 +94,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
 
         saveSnapshotRec(node.right, writer);
     }
+    //restorsion 
     public void restoreData() {
         Scanner scanner = new Scanner(System.in);
     
@@ -101,7 +102,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         System.out.println("Choose the data type to restore (1: Air Quality, 2: Water Quality, 3: Noise Pollution): ");
         int choice = scanner.nextInt();
     
-        int snapshotIndex = -1;
+        int snapshotIndex;
     
         // Display available snapshot options based on the user's choice
         switch (choice) {
@@ -213,5 +214,4 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         System.out.print("(" + root.element + ") ");
         inorder(root.right);
     }
-   
 }
