@@ -130,7 +130,7 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     }
     
     public void restoreSnapshot(int snapshotIndex) {
-        String filename = "air_copy" + snapshotIndex + ".txt";
+        String filename = "air_copy_" + snapshotIndex + ".txt";
         airQualityBST.clear(); // Clear existing air quality data before restoring
 
         // Restore data from the snapshot

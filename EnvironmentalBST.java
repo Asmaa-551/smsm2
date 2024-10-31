@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class EnvironmentalBST extends BST<EnvironmentalData> {
-    private AirQuality airQualityData;
-    private WaterQuality waterQualityData;
-    private NoisePollution noisePollutionData; // Added for noise pollution
-    private int airSnapshotIndex = 0; // To keep track of Air Quality snapshots
-    private int waterSnapshotIndex = 0; // To keep track of Water Quality snapshots
-    private int noiseSnapshotIndex = 0; // To keep track of Noise Pollution snapshots
+    private static int airSnapshotIndex = 0; // To keep track of Air Quality snapshots
+    private static int waterSnapshotIndex = 0; // To keep track of Water Quality snapshots
+    private static int noiseSnapshotIndex = 0; // To keep track of Noise Pollution snapshots
 
     public EnvironmentalBST() {}
 
@@ -119,7 +116,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
                     System.out.println("Invalid snapshot index for Air Quality. Please enter a valid index.");
                     return;
                 }
-                airQualityData.restoreSnapshot(snapshotIndex - 1); // Using snapshotIndex - 1 to adjust for 0-based index
+                testBST.airClass.restoreSnapshot(snapshotIndex); // Using snapshotIndex - 1 to adjust for 0-based index
                 break;
     
             case 2:
@@ -133,7 +130,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
                     System.out.println("Invalid snapshot index for Water Quality. Please enter a valid index.");
                     return;
                 }
-                waterQualityData.restoreSnapshot(snapshotIndex - 1); // Using snapshotIndex - 1 to adjust for 0-based index
+                testBST.waterClass.restoreSnapshot(snapshotIndex); // Using snapshotIndex - 1 to adjust for 0-based index
                 break;
     
             case 3:
@@ -147,7 +144,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
                     System.out.println("Invalid snapshot index for Noise Pollution. Please enter a valid index.");
                     return;
                 }
-                noisePollutionData.restoreSnapshot(snapshotIndex - 1); // Using snapshotIndex - 1 to adjust for 0-based index
+                testBST.noiseClass.restoreSnapshot(snapshotIndex); // Using snapshotIndex - 1 to adjust for 0-based index
                 break;
     
             default:
@@ -157,9 +154,13 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
     
     // Method to display available air snapshot options
     private void displayAirSnapshotOptions() {
+        if (airSnapshotIndex == 0) {
+            System.out.println("No Air Quality snapshots available.");
+            return;
+        }
         System.out.println("Available Air Quality snapshots: ");
-        for (int i = 0; i < airSnapshotIndex; i++) { // Use airSnapshotIndex to determine available snapshots
-            System.out.println("Air Copy " + (i + 1)); // Displaying the snapshots as 1-based index
+        for (int i = 0; i < airSnapshotIndex; i++) {
+            System.out.println("Air Copy " + (i + 1));
         }
     }
     
