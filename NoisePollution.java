@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Date;
@@ -176,5 +178,33 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
 
     public List<Date> getTimestampHistory() {
         return timestampHistory;
+    }
+
+    public void deleteOldData() {
+        LocalDateTime now = LocalDateTime.now();
+        Duration maxAge = Duration.ofDays(30); // Duration set to 30 days
+        List<String> oldLocations = new ArrayList<>(); // To store locations of old data
+
+        // Traverse each location in sortedLocationsWater
+        for (String location : sortedLocationsNoise) {
+            NoisePollution data = (NoisePollution) noisePollutionBST.searchByLocation(location);
+            if (data != null) {
+                LocalDateTime dataTimestamp = data.getTimestampForComparison();
+                // Check if data is older than maxAge
+                if (dataTimestamp != null && Duration.between(dataTimestamp, now).compareTo(maxAge) > 0) {
+                    oldLocations.add(location); // Collect old data for removal
+                }
+            }
+        }
+
+        // Remove old data from both the BST and sorted locations
+        for (String location : oldLocations) {
+            NoisePollution data = (NoisePollution) noisePollutionBST.searchByLocation(location);
+            if (data != null) {
+                noisePollutionBST.delete(data); // Delete from BST
+                sortedLocationsWater.remove(location); // Remove from sorted list
+                System.out.println("Deleted old data for location: " + location);
+            }
+        }
     }
 }
