@@ -183,5 +183,9 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public List<Date> getTimestampHistory() {
         return timestampHistory;
     }
+    public void print() {
+        System.out.println("Air Quality Data Tree:");
+        airQualityBST.print("", airQualityBST.getRoot(), false);
+    }
 }
 

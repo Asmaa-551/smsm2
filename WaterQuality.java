@@ -176,4 +176,8 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     public List<Date> getTimestampHistory() {
         return timestampHistory;
     }
+    public void print() {
+        System.out.println("Water Quality Data Tree:");
+        waterQualityBST.print("", waterQualityBST.getRoot(), false);
+    }
 }

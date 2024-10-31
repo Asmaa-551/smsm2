@@ -72,15 +72,23 @@ public class testBST {
     // Method for inserting new environmental data
 	public static void insertNewData() {
         Scanner scanner = new Scanner(System.in);
-        
-        // Prompt the user to select the type of data
+        int typeChoice = 0;
+    // Prompt the user to select the type of data, repeat if invalid
+    while (true) {
         System.out.println("Select the type of environmental data to insert:");
         System.out.println("1. Air Quality");
         System.out.println("2. Water Quality");
         System.out.println("3. Noise Pollution");
-        int typeChoice = scanner.nextInt();
+        typeChoice = scanner.nextInt();
         scanner.nextLine(); // Consume newline after int
-    
+
+        if (typeChoice >= 1 && typeChoice <= 3) {
+            break; // Valid choice, exit loop
+        } else {
+            System.out.println("Invalid choice. Please select a number between 1 and 3.");
+        }
+    }
+
         // Gather common data for all types, with validation
         System.out.println("Enter the location name:");
         String locationName = scanner.nextLine().trim();
@@ -90,7 +98,8 @@ public class testBST {
         }
     
         EnvironmentalData existingData = null; // To hold existing data if found
-        
+    
+        // Proceed with the type-specific search based on typeChoice
         switch (typeChoice) {
             case 1: // Air Quality
                 existingData = airClass.search(locationName); // Search for existing data
@@ -103,12 +112,8 @@ public class testBST {
             case 3: // Noise Pollution
                 existingData = noiseClass.search(locationName); // Search for existing data
                 break;
-    
-            default:
-                System.out.println("Invalid choice. Please select a valid type of environmental data.");
-                return; // Exit method for invalid choice
         }
-    
+        
         // If data exists, ask if the user wants to update it
         if (existingData != null) {
             System.out.println("Data for " + locationName + " already exists. Would you like to update it? (yes/no)");
@@ -541,6 +546,44 @@ public class testBST {
     public static void restoreData() {
         BST.restoreData();
     }
+    public static void printSelectedTree() {
+        Scanner scanner = new Scanner(System.in);
+        int typeChoice = 0;
+    
+        // Prompt the user to select the type of tree to print
+        while (true) {
+            System.out.println("Select the type of environmental data tree to print:");
+            System.out.println("1. Air Quality");
+            System.out.println("2. Water Quality");
+            System.out.println("3. Noise Pollution");
+            typeChoice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline after int
+    
+            if (typeChoice >= 1 && typeChoice <= 3) {
+                break; // Valid choice, exit loop
+            } else {
+                System.out.println("Invalid choice. Please select a number between 1 and 3.");
+            }
+        }
+    
+        // Call the print method on the appropriate tree based on the user's choice
+        switch (typeChoice) {
+            case 1:
+                System.out.println("Printing Air Quality data:");
+                    airClass.print(); // Directly call print method for Air Quality
+                break;
+    
+            case 2:
+                System.out.println("Printing Water Quality data:");
+                    waterClass.print(); // Directly call print method for Water Quality
+                break;
+    
+            case 3:
+                System.out.println("Printing Noise Pollution data:");
+                    noiseClass.print(); // Directly call print method for Noise Pollution
+                break;
+        }
+    }    
     public static void visualizeEnvironmentalData() {
         System.out.println("Select the type of data to visualize:");
         System.out.println("1. Air Quality Trends");
