@@ -1,9 +1,7 @@
 import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
-
 public class testBST {
-    
     static EnvironmentalBST BST = new EnvironmentalBST();
     static AirQuality airClass = new AirQuality();
     static WaterQuality waterClass = new WaterQuality();
@@ -11,7 +9,6 @@ public class testBST {
     static Scanner scanner = new Scanner(System.in);
 	public static void main(String[] args) {
         int choice;
-        
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
@@ -251,18 +248,30 @@ public class testBST {
                 switch (choice) {
                     case 1: // Air Quality
                         System.out.println("Enter AQI value: ");
+                        int aqi = scanner.nextInt();
+                        if (aqi < 0) { 
+                           throw new IllegalArgumentException("AQI value Index must be greater than 0");
+                          }
                         AirQuality newAirData = new AirQuality(locationName, newLatitude, newLongitude, scanner.nextInt());
                         airClass.insert(newAirData); // Assuming insert method is available
                         System.out.println("Air Quality data added successfully.");
                         break;
                     case 2: // Water Quality
                         System.out.println("Enter Water Quality Index value: ");
+                        int wqi = scanner.nextInt();
+                        if (wqi < 0) { 
+                          throw new IllegalArgumentException("Water Quality Index must be greater than 0");
+                          }
                         WaterQuality newWaterData = new WaterQuality(locationName, newLatitude, newLongitude, scanner.nextInt());
                         waterClass.insert(newWaterData);
                         System.out.println("Water Quality data added successfully.");
                         break;
                     case 3: // Noise
                         System.out.println("Enter Noise Level value: ");
+                        int noiseLevel = scanner.nextInt();
+                           if (noiseLevel < 0) {
+                            throw new IllegalArgumentException("Noise Level must be greater than 0");
+                         }
                         NoisePollution newNoiseData = new NoisePollution(locationName, newLatitude, newLongitude, scanner.nextInt());
                         noiseClass.insert(newNoiseData);
                         System.out.println("Noise data added successfully.");
@@ -532,7 +541,6 @@ public class testBST {
     public static void restoreData() {
         BST.restoreData();
     }
-
     public static void visualizeEnvironmentalData() {
         System.out.println("Select the type of data to visualize:");
         System.out.println("1. Air Quality Trends");
