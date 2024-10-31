@@ -61,9 +61,9 @@ public class testBST {
         System.out.println("2. Update existing environmental data");
         System.out.println("3. Delete environmental data");
         System.out.println("4. Search for specific environmental data");
-        System.out.println("5. Display environmental rankings (Best to Worst)");
-        System.out.println("6. Display environmental rankings (Worst to Best)");
-        System.out.println("7. Backup data");
+        System.out.println("5. Display Rankings");
+        System.out.println("6. Backup data");
+        System.out.println("7. Restore data");
         System.out.println("8. Visulazie environmental data");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
@@ -221,8 +221,17 @@ public class testBST {
         String locationName = scanner.nextLine().trim();
     
         // Search for existing data based on location name
-        EnvironmentalData existingData = BST.searchByLocation(locationName);
-    
+        EnvironmentalData existingData;
+        if (choice == 1) {
+            existingData = airClass.search(locationName);
+        } else if (choice == 2) {
+            existingData = waterClass.search(locationName);
+        } else if (choice == 3) {
+            existingData = noiseClass.search(locationName);
+        } else {
+            System.out.println("Invalid choice.");
+            return;
+        }    
         if (existingData == null) {
             // If no existing data found, ask user if they want to add it
             System.out.println("No existing data found for " + locationName + ".");
