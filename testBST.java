@@ -10,10 +10,51 @@ public class testBST {
     static NoisePollution noiseClass = new NoisePollution();  
     static Scanner scanner = new Scanner(System.in);
     static VisualData visualData = new VisualData(BST);
+	public static void main(String[] args) {
+        int choice;
+        
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
 
+            // Validate input for choice
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next(); // Clear the invalid input
+            }
+            choice = scanner.nextInt();
 
-
-    // Method to display the menu
+            switch (choice) {
+                case 1:
+                    insertNewData();
+                    break;
+                case 2:
+                    updateData();
+                    break;
+                case 3:
+                    deleteData();
+                    break;
+                case 4:
+                    searchData();
+                    break;
+                case 5:
+                    displayRankings();
+                    break;
+                case 6:
+                    backupData();
+                    break;
+                case 7:
+                    restoreData();
+                    break;
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 0);
+    }
+	// Method to display the menu
     public static void displayMenu() {
         System.out.println("------------------------------------------------------------");
         System.out.println("Environmental Quality Monitoring System");
@@ -28,10 +69,10 @@ public class testBST {
         System.out.println("8. Visulazie environmental data");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
-    }
+	}
 
     // Method for inserting new environmental data
-    public static void insertNewData() {
+	public static void insertNewData() {
         Scanner scanner = new Scanner(System.in);
         
         // Prompt the user to select the type of data
@@ -174,7 +215,7 @@ public class testBST {
     }
 
     // Method for updating existing environmental data
-    public void updateData() {        
+    public static void updateData() {        
         // Prompt for type of environmental data (Air, Water, or Noise)
         System.out.println("Choose the data type to update (1: Air Quality, 2: Water Quality, 3: Noise): ");
         int choice = scanner.nextInt();
@@ -274,7 +315,7 @@ public class testBST {
     }
 
     // Method for deleting environmental data
-    public void deleteData() {
+    public static void deleteData() {
         Scanner scanner = new Scanner(System.in);
         
         // Prompt the user to select the type of data to delete
@@ -331,7 +372,7 @@ public class testBST {
         }
     }
 
-    public void searchData() {
+    public static void searchData() {
         Scanner scanner = new Scanner(System.in);
         
         // Prompt the user to select the type of data to search for
@@ -390,7 +431,7 @@ public class testBST {
     
 
     // Method for displaying environmental rankings (Best to Worst)
-    public void displayRankings() {
+    public static void displayRankings() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Select ranking order:");
@@ -425,7 +466,7 @@ public class testBST {
     }
 
     // Method for backing up data
-    public void backupData() {
+    public static void backupData() {
         Scanner scanner = new Scanner(System.in);
         
         System.out.println("What type of data do you want to backup?");
@@ -489,10 +530,9 @@ public class testBST {
     }
 
     // Method for restoring data from backup
-    public void restoreData() {
+    public static void restoreData() {
         BST.restoreData();
     }
-
     public static void visualizeEnvironmentalData() {
         System.out.println("Select the type of data to visualize:");
         System.out.println("1. Air Quality Trends");
