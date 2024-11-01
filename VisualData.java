@@ -1,39 +1,42 @@
-import java.util.List;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class VisualData {
-    
-        private EnvironmentalBST environmentalBST;
-    
-        // Constructor to initialize with EnvironmentalBST instance
-        public VisualData(EnvironmentalBST environmentalBST) {
-            this.environmentalBST = environmentalBST;
-        }
-    
-        // Method to visualize data for a single city
-        public void visualizeByCity(String city) {
-            AirQuality airData = (AirQuality) AirQuality.airQualityBST.searchByLocation(city);
-            WaterQuality waterData = (WaterQuality) WaterQuality.waterQualityBST.searchByLocation(city);
-            NoisePollution noiseData = (NoisePollution) NoisePollution.noisePollutionBST.searchByLocation(city);
-    
-            if (airData != null && waterData != null && noiseData != null) {
-                System.out.println("Visualizing data for: " + city);
-    
-                plotEnvironmentalParameter("Air Quality Index (AQI)", airData.getAqiHistory(), airData.getTimestampHistory());
-                plotEnvironmentalParameter("Water Quality Index", waterData.getWaterQualityIndexHistory(), waterData.getTimestampHistory());
-                plotEnvironmentalParameter("Noise Level", noiseData.getNoiseLevelHistory(), noiseData.getTimestampHistory());
-            } else {
-                System.out.println("Data for city " + city + " is incomplete or unavailable.");
+    private EnvironmentalBST environmentalBST;
+
+    // Constructor to initialize with EnvironmentalBST instance
+    public VisualData(EnvironmentalBST environmentalBST) {
+        this.environmentalBST = environmentalBST;
+    }
+
+    // Method to visualize data for a single city
+    public void visualizeByCity(String city) {
+        EnvironmentalData data = environmentalBST.searchByLocation(city);
+
+        if (data instanceof AirQuality || data instanceof WaterQuality || data instanceof NoisePollution) {
+            System.out.println("Visualizing data for: " + city);
+            
+            if (data instanceof AirQuality) {
+                plotEnvironmentalParameter("Air Quality Index (AQI)", ((AirQuality) data).getAqi(), data.getMeasurementTimestamp());
+            } else if (data instanceof WaterQuality) {
+                plotEnvironmentalParameter("Water Quality Index", ((WaterQuality) data).getWaterQualityIndex(), data.getMeasurementTimestamp());
+            } else if (data instanceof NoisePollution) {
+                plotEnvironmentalParameter("Noise Level", ((NoisePollution) data).getNoiseLevel(), data.getMeasurementTimestamp());
             }
-        }
-    
-        private void plotEnvironmentalParameter(String parameter, List<Double> values, List<Date> timestamps) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            System.out.println("Plotting " + parameter + " over time:");
-            for (int i = 0; i < values.size(); i++) {
-                System.out.printf("%s: %.2f%n", dateFormat.format(timestamps.get(i)), values.get(i));
-            }
+        } else {
+            System.out.println("Data for city " + city + " is incomplete or unavailable.");
         }
     }
-    
+
+    private void plotEnvironmentalParameter(String parameter, double value, String timestamp) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
+        try {
+            Date date = dateFormat.parse(timestamp);  // Convert string to Date
+            System.out.println("Plotting " + parameter + " at " + dateFormat.format(date) + ": " + value);
+        } catch (ParseException e) {
+            System.out.println("Error parsing timestamp: " + timestamp);
+        }
+    }
+}

@@ -676,18 +676,21 @@ public class testBST {
         // Call visualization based on user choice
         switch (choice) {
             case 1:
-                visualData.visualizeByCity(city); // Visualize air quality for specified city
+                System.out.println("Visualizing Air Quality Trends");
+                visualData.visualizeByCity(city);
                 break;
             case 2:
-                visualData.visualizeByCity(city); // Visualize water quality for specified city
+                System.out.println("Visualizing Water Quality Trends");
+                visualData.visualizeByCity(city);
                 break;
             case 3:
-                visualData.visualizeByCity(city); // Visualize noise pollution for specified city
+                System.out.println("Visualizing Noise Pollution Trends");
+                visualData.visualizeByCity(city);
                 break;
             default:
-                System.out.println("Invalid choice. Please select 1, 2, or 3."); // Handle invalid input
+                System.out.println("Invalid choice. Please select 1, 2, or 3.");
                 break;
-        }
+        }        
     }
 
     // Method to handle user input and menu navigation

@@ -20,7 +20,6 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
         this.waterQualityIndex = waterQualityIndex;
         this.waterQualityIndexHistory = new ArrayList<>();
         this.timestampHistory = new ArrayList<>();
-        recordWaterQualityIndex(waterQualityIndex);
     }
     public WaterQuality(){}
 
@@ -167,10 +166,6 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
         System.out.println("  Noise Level: " + getWaterQualityIndex());
     }
 
-    public void recordWaterQualityIndex(double waterQualityIndex) {
-        this.waterQualityIndexHistory.add(waterQualityIndex);
-        this.timestampHistory.add(new Date()); // Store the current time
-    }
     public List<Double> getWaterQualityIndexHistory() {
         return waterQualityIndexHistory;
     }

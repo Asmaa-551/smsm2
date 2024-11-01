@@ -19,7 +19,6 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
         this.noiseLevel = noiseLevel;
         this.noiseLevelHistory = new ArrayList<>();
         this.timestampHistory = new ArrayList<>();
-        recordNoiseLevel(noiseLevel); // Record initial noise level
     }
     public NoisePollution(){}
 
@@ -168,10 +167,6 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
         noisePollutionBST.inorder();
     }
 
-    public void recordNoiseLevel(double noiseLevel) {
-        this.noiseLevelHistory.add(noiseLevel);
-        this.timestampHistory.add(new Date()); // Store the current time
-    }
     public List<Double> getNoiseLevelHistory() {
         return noiseLevelHistory;
     }
