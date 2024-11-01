@@ -3,72 +3,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class VisualData {
-    private EnvironmentalBST environmentalBST;
 
-    public VisualData(EnvironmentalBST environmentalBST) {
-        this.environmentalBST = environmentalBST;
-    }
-
-    public void visualizeAirQualityTrends() {
-        System.out.println("Visualizing Air Quality Trends:");
-        for (EnvironmentalData data : environmentalBST.getAllData()) { // Assume you have a method to get all data
-            if (data instanceof AirQuality) {
-                AirQuality airData = (AirQuality) data;
+        // Method to visualize data for a single city
+        public void visualizeByCity(String city) {
+            AirQuality airData = (AirQuality) AirQuality.airQualityBST.searchByLocation(city);
+            WaterQuality waterData = (WaterQuality) WaterQuality.waterQualityBST.searchByLocation(city);
+            NoisePollution noiseData = (NoisePollution) NoisePollution.noisePollutionBST.searchByLocation(city);
+    
+            if (airData != null && waterData != null && noiseData != null) {
+                System.out.println("Visualizing data for: " + city);
+                
+                // Retrieve and plot historical AQI data
                 List<Double> aqiHistory = airData.getAqiHistory();
-                List<Date> timestampHistory = airData.getTimestampHistory();
-                printTrends(aqiHistory, timestampHistory);
+                List<Date> airTimestamps = airData.getTimestampHistory();
+                plotData("Air Quality Index (AQI)", aqiHistory, airTimestamps);
+    
+                // Retrieve and plot historical water quality data
+                List<Double> waterQualityHistory = waterData.getWaterQualityHistory();
+                List<Date> waterTimestamps = waterData.getTimestampHistory();
+                plotData("Water Quality", waterQualityHistory, waterTimestamps);
+    
+                // Retrieve and plot historical noise level data
+                List<Double> noiseLevelHistory = noiseData.getNoiseLevelHistory();
+                List<Date> noiseTimestamps = noiseData.getTimestampHistory();
+                plotData("Noise Level", noiseLevelHistory, noiseTimestamps);
+            } else {
+                System.out.println("Data for city " + city + " is incomplete or unavailable.");
             }
         }
-    }
-
-    private void printTrends(List<Double> values, List<Date> timestamps) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for (int i = 0; i < values.size(); i++) {
-            System.out.printf("Date: %s, AQI: %.2f%n", dateFormat.format(timestamps.get(i)), values.get(i));
-        }
-    }
-
-    public void visualizeWaterQualityTrends() {
-        System.out.println("Visualizing Water Quality Trends:");
-        for (EnvironmentalData data : environmentalBST.getAllData()) {
-            if (data instanceof WaterQuality) {
-                WaterQuality waterData = (WaterQuality) data;
-                List<Double> wqiHistory = waterData.getWaterQualityIndexHistory(); // Assuming a similar method exists
-                List<Date> timestampHistory = waterData.getTimestampHistory();
-                printTrends(wqiHistory, timestampHistory);
+    
+        // Basic plotting method (for example purposes, replace with your plotting logic)
+        private void plotData(String parameter, List<Double> values, List<Date> timestamps) {
+            System.out.println("Plotting " + parameter + " over time:");
+            for (int i = 0; i < values.size(); i++) {
+                System.out.println(timestamps.get(i) + ": " + values.get(i));
             }
-        }
-    }
-
-    public void visualizeNoisePollutionTrends() {
-        System.out.println("Visualizing Noise Pollution Trends:");
-        for (EnvironmentalData data : environmentalBST.getAllData()) {
-            if (data instanceof NoisePollution) {
-                NoisePollution noiseData = (NoisePollution) data;
-                List<Double> noiseHistory = noiseData.getNoiseLevelHistory(); // Assuming a similar method exists
-                List<Date> timestampHistory = noiseData.getTimestampHistory();
-                printTrends(noiseHistory, timestampHistory);
-            }
-        }
-    }
-
-    public void displayHistogram(String title, double[] data) {
-        System.out.println("\n" + title);
-        System.out.println("===============================");
-        
-        for (double value : data) {
-            // Scale the value for display; adjust the multiplier as needed for visibility
-            int scaledValue = (int) (value * 0.5); // Scale down for histogram representation
-            
-            // Print the histogram line
-            System.out.print(value + ": ");
-            for (int i = 0; i < scaledValue; i++) {
-                System.out.print("#");
-            }
-            System.out.println(); // Move to the next line
         }
     }
 }
-
-
-
+    
