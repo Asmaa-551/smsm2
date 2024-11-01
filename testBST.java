@@ -301,40 +301,48 @@ public class testBST {
         } else {
             // Existing data found; prompt for AQI update
             double newValue;
-            switch (choice) {
-                case 1: // Air Quality
-                    if (existingData instanceof AirQuality) {
-                        System.out.println("Enter new AQI value (current: " + ((AirQuality) existingData).getAqi() + "): ");
-                        newValue = scanner.nextDouble();
-                        airClass.updateMeasurement(newValue);
-                    } else {
-                        System.out.println("The data for this location is not of Air Quality type.");
-                    }
-                    break;
-                case 2: // Water Quality
-                    if (existingData instanceof WaterQuality) {
-                        System.out.println("Enter new Water Quality Index value (current: " + ((WaterQuality) existingData).getWaterQualityIndex() + "): ");
-                        newValue = scanner.nextDouble();
-                        waterClass.updateMeasurement(newValue);
-                    } else {
-                        System.out.println("The data for this location is not of Water Quality type.");
-                    }
-                    break;
-                case 3: // Noise
-                    if (existingData instanceof NoisePollution) {
-                        System.out.println("Enter new Noise Level value (current: " + ((NoisePollution) existingData).getNoiseLevel() + "): ");
-                        newValue = scanner.nextDouble();
-                        noiseClass.updateMeasurement(newValue);
-                    } else {
-                        System.out.println("The data for this location is not of Noise type.");
-                    }
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please enter 1, 2, or 3.");
-                    break;
+            try {
+                switch (choice) {
+                    case 1: // Air Quality
+                        if (existingData instanceof AirQuality) {
+                            System.out.println("Enter new AQI value (current: " + ((AirQuality) existingData).getAqi() + "): ");
+                            newValue = scanner.nextDouble();
+                            ((AirQuality) existingData).updateMeasurement(newValue);
+                        } else {
+                            throw new InvalidDataTypeException("The data for this location is not of Air Quality type.");
+                        }
+                        break;
+                        
+                    case 2: // Water Quality
+                        if (existingData instanceof WaterQuality) {
+                            System.out.println("Enter new Water Quality Index value (current: " + ((WaterQuality) existingData).getWaterQualityIndex() + "): ");
+                            newValue = scanner.nextDouble();
+                            ((WaterQuality) existingData).updateMeasurement(newValue);
+                        } else {
+                            throw new InvalidDataTypeException("The data for this location is not of Water Quality type.");
+                        }
+                        break;
+                        
+                    case 3: // Noise
+                        if (existingData instanceof NoisePollution) {
+                            System.out.println("Enter new Noise Level value (current: " + ((NoisePollution) existingData).getNoiseLevel() + "): ");
+                            newValue = scanner.nextDouble();
+                            ((NoisePollution) existingData).updateMeasurement(newValue);
+                        } else {
+                            throw new InvalidDataTypeException("The data for this location is not of Noise type.");
+                        }
+                        break;
+                        
+                    default:
+                        System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+                        break;
+                }
+            } catch (InvalidDataTypeException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
+                
     public static void deleteData() {
         System.out.println("Do you want to:");
         System.out.println("1. Delete a specific environmental data entry");
@@ -631,20 +639,22 @@ public class testBST {
         System.out.println("3. Noise Pollution Trends");
         
         int choice = scanner.nextInt(); // Get user input for data type
-        
-        switch (choice) {
-            case 1:
-                VisualData.visualizeAirQualityTrends(); // Visualize air quality data
-                break;
-            case 2:
-                VisualData.visualizeWaterQualityTrends(); // Visualize water quality data
-                break;
-            case 3:
-                VisualData.visualizeNoisePollutionTrends(); // Visualize noise pollution data
-                break;
-            default:
-                System.out.println("Invalid choice. Please select 1, 2, or 3."); // Handle invalid input
-                break;
+        try {
+            switch (choice) {
+                case 1:
+                    VisualData.visualizeAirQualityTrends(); // Visualize air quality data
+                    break;
+                case 2:
+                    VisualData.visualizeWaterQualityTrends(); // Visualize water quality data
+                    break;
+                case 3:
+                    VisualData.visualizeNoisePollutionTrends(); // Visualize noise pollution data
+                    break;
+                default:
+                    throw new InvalidChoiceException("Invalid choice. Please select 1, 2, or 3.");
+            }
+        } catch (InvalidChoiceException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
