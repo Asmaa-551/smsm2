@@ -17,11 +17,6 @@ public class testBST {
     public static void main(String[] args) {
         int choice = -1; // Initialize choice to an invalid value
 
-        Scanner file = new Scanner(System.in);
-        System.out.print("Enter the filename to load environmental data: ");
-        String filename = file.nextLine();
-        Data.loadData(filename);
-
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
@@ -63,12 +58,9 @@ public class testBST {
                     displayRankings();
                     break;
                 case 6:
-                    backupData();
+                    backupOrRestoreData();
                     break;
                 case 7:
-                    restoreData();
-                    break;
-                case 8:
                     visualizeEnvironmentalData(); 
                     break;
                 case 0:
@@ -86,14 +78,13 @@ public class testBST {
         System.out.println("------------------------------------------------------------");
         System.out.println("Environmental Quality Monitoring System");
         System.out.println("------------------------------------------------------------");
-        System.out.println("1. Insert new environmental data");
+        System.out.println("1. Insert new environmental data or Upload a data from file");
         System.out.println("2. Update existing environmental data");
         System.out.println("3. Delete environmental data");
         System.out.println("4. Search for specific environmental data");
         System.out.println("5. Display Rankings");
-        System.out.println("6. Backup data");
-        System.out.println("7. Restore data");
-        System.out.println("8. Visulazie environmental data");
+        System.out.println("6. Backup data or Restore data");
+        System.out.println("7. Visulazie environmental data");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
 	}
@@ -102,8 +93,14 @@ public class testBST {
 	public static void insertNewData() {
         Scanner scanner = new Scanner(System.in);
         int typeChoice = 0;
-    // Prompt the user to select the type of data, repeat if invalid
-    while (true) {
+        System.out.println("Select data insertion method:");
+        System.out.println("1. Manually enter environmental data");
+        System.out.println("2. Upload data from file");
+        int inputChoice = scanner.nextInt();
+        scanner.nextLine();
+
+    switch (inputChoice) {
+      case 1:
         System.out.println("Select the type of environmental data to insert:");
         System.out.println("1. Air Quality");
         System.out.println("2. Water Quality");
@@ -116,7 +113,6 @@ public class testBST {
         } else {
             System.out.println("Invalid choice. Please select a number between 1 and 3.");
         }
-    }
 
         // Gather common data for all types, with validation
         System.out.println("Enter the location name:");
@@ -125,6 +121,7 @@ public class testBST {
             System.out.println("Invalid input: Location name cannot be empty.");
             return;
         }
+
     
         EnvironmentalData existingData = null; // To hold existing data if found
     
@@ -203,7 +200,19 @@ public class testBST {
                 System.out.println("Noise Pollution data inserted successfully!");
                 break;
         }
-    }
+    case 2:
+        // Prompt for filename and load data from file
+        System.out.print("Enter filename to upload data from: ");
+        String filename = scanner.nextLine();
+        Data.loadData(filename);  // Assume Data.loadData(filename) adds all data to the system
+        System.out.println("Data from file " + filename + " uploaded successfully.");
+        break;
+        default:
+        System.out.println("Invalid choice. Please select either 1 or 2.");
+        break;
+}
+}
+
     
     
     private static int getValidatedIntInput(Scanner scanner, String fieldName, int minValue, int maxValue) {
@@ -597,7 +606,6 @@ public class testBST {
                 break;
         }
     }
-
     private static double[] getAQIValuesForHistogram() {
         List<EnvironmentalData> allData = BST.getAllData();
         List<Double> aqiValues = new ArrayList<>();
@@ -693,6 +701,49 @@ public class testBST {
         }        
     }
 
+    // Method for backing up or restoring data
+public static void backupOrRestoreData() {
+    System.out.println("What would you like to do?");
+    System.out.println("1: Backup data");
+    System.out.println("2: Restore data");
+    System.out.print("Enter your choice: ");
+    
+    // Validate input for choice
+    int choice = -1; // Initialize to an invalid value
+    while (true) {
+        try {
+            choice = scanner.nextInt();
+            if (choice < 1 || choice > 2) {
+                System.out.println("Invalid choice. Please enter 1 or 2.");
+            } else {
+                break; // Valid input
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.next(); // Clear the invalid input
+        }
+    }
+
+    // Handle backup or restore based on user choice
+    switch (choice) {
+        case 1:
+            // Backup data
+            backupData(); // Call existing backupData method
+            break;
+        case 2:
+            // Restore data
+            restoreData(); // Call existing restoreData method
+            System.out.println("Data restored successfully.");
+            break;
+        default:
+            // This case should not be reached due to validation above
+            System.out.println("An unexpected error occurred.");
+            break;
+    }
+}
+
+
+
     // Method to handle user input and menu navigation
     public void run() {
         int choice;
@@ -717,12 +768,9 @@ public class testBST {
                     displayRankings();
                     break;
                 case 6:
-                    backupData();
+                backupOrRestoreData();
                     break;
                 case 7:
-                    restoreData();
-                    break;
-                case 8:
                     visualizeEnvironmentalData(); 
                     break;
                 case 0:
