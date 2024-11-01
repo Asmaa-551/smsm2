@@ -68,6 +68,18 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         }
     }
 
+    public static int getAirSnapshotIndex() {
+        return airSnapshotIndex;
+    }
+    
+    public static int getWaterSnapshotIndex() {
+        return waterSnapshotIndex;
+    }
+    
+    public static int getNoiseSnapshotIndex() {
+        return noiseSnapshotIndex;
+    }    
+
     private void saveSnapshotRec(TreeNode<EnvironmentalData> node, BufferedWriter writer) throws IOException {
         if (node == null) {
             return;

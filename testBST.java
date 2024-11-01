@@ -684,16 +684,16 @@ public class testBST {
         // Call visualization based on user choice
         switch (choice) {
             case 1:
-                System.out.println("Visualizing Air Quality Trends");
-                visualData.visualizeByCity(city);
+                System.out.println("Visualizing Air Quality Trends for " + city);
+                visualData.visualizeByCityUsingSnapshot(city, "air");
                 break;
             case 2:
-                System.out.println("Visualizing Water Quality Trends");
-                visualData.visualizeByCity(city);
+                System.out.println("Visualizing Water Quality Trends for " + city);
+                visualData.visualizeByCityUsingSnapshot(city, "water");
                 break;
             case 3:
-                System.out.println("Visualizing Noise Pollution Trends");
-                visualData.visualizeByCity(city);
+                System.out.println("Visualizing Noise Pollution Trends for " + city);
+                visualData.visualizeByCityUsingSnapshot(city, "noise");
                 break;
             default:
                 System.out.println("Invalid choice. Please select 1, 2, or 3.");
