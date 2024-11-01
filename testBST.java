@@ -17,10 +17,10 @@ public class testBST {
     public static void main(String[] args) {
         int choice = -1; // Initialize choice to an invalid value
 
-        Scanner file = new Scanner(System.in);
-        System.out.print("Enter the filename to load environmental data: ");
-        String filename = file.nextLine();
-        Data.loadData(filename);
+        // Scanner file = new Scanner(System.in);
+        // System.out.print("Enter the filename to load environmental data: ");
+        // String filename = file.nextLine();
+        // Data.loadData(filename);
 
         do {
             displayMenu();
@@ -71,6 +71,8 @@ public class testBST {
                 case 8:
                     visualizeEnvironmentalData(); 
                     break;
+                case 9:
+                    printSelectedTree();
                 case 0:
                     System.out.println("Exiting...");
                     break;
@@ -94,6 +96,7 @@ public class testBST {
         System.out.println("6. Backup data");
         System.out.println("7. Restore data");
         System.out.println("8. Visulazie environmental data");
+        System.out.println("9. Visulazie");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
 	}
@@ -659,7 +662,8 @@ public class testBST {
                     noiseClass.print(); // Directly call print method for Noise Pollution
                 break;
         }
-    }    
+    }   
+
     public static void visualizeEnvironmentalData() {
         System.out.println("Select the type of data to visualize:");
         System.out.println("1. Air Quality Trends");
@@ -722,6 +726,8 @@ public class testBST {
                 case 8:
                     visualizeEnvironmentalData(); 
                     break;
+                case 9:
+                    printSelectedTree();
                 case 0:
                     System.out.println("Exiting...");
                     break;
