@@ -21,7 +21,6 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         this.aqi = aqi;
         this.aqiHistory = new ArrayList<>();
         this.timestampHistory = new ArrayList<>();
-        recordAQI(aqi); // Record initial AQI value
     }
     public AirQuality(){}
 
@@ -130,7 +129,7 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     }
     
     public void restoreSnapshot(int snapshotIndex) {
-        String filename = "air_copy" + snapshotIndex + ".txt";
+        String filename = "air_copy_" + snapshotIndex + ".txt";
         airQualityBST.clear(); // Clear existing air quality data before restoring
 
         // Restore data from the snapshot
@@ -174,10 +173,6 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         airQualityBST.inorder();
     }
 
-    public void recordAQI(double aqi) {
-        this.aqiHistory.add(aqi);
-        this.timestampHistory.add(new Date()); // Store the current time
-    }
     public List<Double> getAqiHistory() {
         return aqiHistory;
     }

@@ -1,24 +1,46 @@
 import java.util.Scanner;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 public class testBST {
     static EnvironmentalBST BST = new EnvironmentalBST();
     static AirQuality airClass = new AirQuality();
     static WaterQuality waterClass = new WaterQuality();
     static NoisePollution noiseClass = new NoisePollution();  
     static Scanner scanner = new Scanner(System.in);
-	public static void main(String[] args) {
-        int choice;
+    static VisualData visualData = new VisualData(BST);
+
+	//public static void main(String[] args) {
+      //  int choice;
+
+    public static void main(String[] args) {
+        int choice = -1; // Initialize choice to an invalid value
+
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
-            // Validate input for choice
-            while (!scanner.hasNextInt()) {
-                System.out.println("Invalid input. Please enter a number.");
-                scanner.next(); // Clear the invalid input
-            }
-            choice = scanner.nextInt();
 
+            // Validate input for choice
+            while (true) {
+                try {
+                    if (scanner.hasNextInt()) {
+                        choice = scanner.nextInt();
+                        break; // Valid input
+                    } else {
+                        System.out.println("Invalid input. Please enter a number.");
+                        scanner.next(); // Clear the invalid input
+                    }
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                    scanner.next(); // Clear the invalid input
+                } catch (NoSuchElementException e) {
+                    System.out.println("Input stream is closed or has been exhausted.");
+                    return; // Exit the program or handle as needed
+                }
+            }
+
+            // Handle the menu choice
             switch (choice) {
                 case 1:
                     insertNewData();
@@ -36,12 +58,9 @@ public class testBST {
                     displayRankings();
                     break;
                 case 6:
-                    backupData();
+                    backupOrRestoreData();
                     break;
                 case 7:
-                    restoreData();
-                    break;
-                case 8:
                     visualizeEnvironmentalData(); 
                     break;
                 case 0:
@@ -51,20 +70,21 @@ public class testBST {
                     System.out.println("Invalid choice. Please try again.");
             }
         } while (choice != 0);
+        
+        scanner.close(); // Close the scanner when done
     }
 	// Method to display the menu
     public static void displayMenu() {
         System.out.println("------------------------------------------------------------");
         System.out.println("Environmental Quality Monitoring System");
         System.out.println("------------------------------------------------------------");
-        System.out.println("1. Insert new environmental data");
+        System.out.println("1. Insert new environmental data or Upload a data from file");
         System.out.println("2. Update existing environmental data");
         System.out.println("3. Delete environmental data");
         System.out.println("4. Search for specific environmental data");
         System.out.println("5. Display Rankings");
-        System.out.println("6. Backup data");
-        System.out.println("7. Restore data");
-        System.out.println("8. Visulazie environmental data");
+        System.out.println("6. Backup data or Restore data");
+        System.out.println("7. Visulazie environmental data");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
 	}
@@ -73,8 +93,14 @@ public class testBST {
 	public static void insertNewData() {
         Scanner scanner = new Scanner(System.in);
         int typeChoice = 0;
-    // Prompt the user to select the type of data, repeat if invalid
-    while (true) {
+        System.out.println("Select data insertion method:");
+        System.out.println("1. Manually enter environmental data");
+        System.out.println("2. Upload data from file");
+        int inputChoice = scanner.nextInt();
+        scanner.nextLine();
+
+    switch (inputChoice) {
+      case 1:
         System.out.println("Select the type of environmental data to insert:");
         System.out.println("1. Air Quality");
         System.out.println("2. Water Quality");
@@ -87,7 +113,6 @@ public class testBST {
         } else {
             System.out.println("Invalid choice. Please select a number between 1 and 3.");
         }
-    }
 
         // Gather common data for all types, with validation
         System.out.println("Enter the location name:");
@@ -96,6 +121,7 @@ public class testBST {
             System.out.println("Invalid input: Location name cannot be empty.");
             return;
         }
+
     
         EnvironmentalData existingData = null; // To hold existing data if found
     
@@ -174,7 +200,19 @@ public class testBST {
                 System.out.println("Noise Pollution data inserted successfully!");
                 break;
         }
-    }
+    case 2:
+        // Prompt for filename and load data from file
+        System.out.print("Enter filename to upload data from: ");
+        String filename = scanner.nextLine();
+        Data.loadData(filename);  // Assume Data.loadData(filename) adds all data to the system
+        System.out.println("Data from file " + filename + " uploaded successfully.");
+        break;
+        default:
+        System.out.println("Invalid choice. Please select either 1 or 2.");
+        break;
+}
+}
+
     
     
     private static int getValidatedIntInput(Scanner scanner, String fieldName, int minValue, int maxValue) {
@@ -528,49 +566,54 @@ public class testBST {
 
     // Method for backing up data
     public static void backupData() {
-        Scanner scanner = new Scanner(System.in);
-        
         System.out.println("What type of data do you want to backup?");
         System.out.println("1: Air Quality");
         System.out.println("2: Water Quality");
         System.out.println("3: Noise Pollution");
-        System.out.println("4. Display Histogram for AQI");
-        System.out.print("Enter your choice : ");
-        
-        int choice = scanner.nextInt();
+        System.out.print("Enter your choice: ");
     
+        // Validate input for choice
+        int choice = -1; // Initialize to an invalid value
+        while (true) {
+            try {
+                choice = scanner.nextInt();
+                if (choice < 1 || choice > 3) {
+                    System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+                } else {
+                    break; // Valid input
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next(); // Clear the invalid input
+            }
+        }
+    
+        // Switch case to handle backup based on user choice
         switch (choice) {
             case 1:
                 // Save Air Quality snapshot if there is data
-                    airClass.saveSnapshot();
-                    System.out.println("Air Quality data backed up successfully.");
+                airClass.saveSnapshot();
+                System.out.println("Air Quality data backed up successfully.");
+                break; // Added break statement
+                
             case 2:
                 // Save Water Quality snapshot if there is data
-                    waterClass.saveSnapshot();// Save the snapshot
-                    System.out.println("Water Quality data backed up successfully.");
-
-                break;
+                waterClass.saveSnapshot();
+                System.out.println("Water Quality data backed up successfully.");
+                break; // Added break statement
     
             case 3:
                 // Save Noise Pollution snapshot if there is data
-
-                    noiseClass.saveSnapshot(); // Save the snapshot
-                    System.out.println("Noise Pollution data backed up successfully.");
-                break;
-
-            case 4:
-                double[] aqiValues = getAQIValuesForHistogram(); 
-                VisualData.displayHistogram("Air Quality Index Histogram", aqiValues);
-                break;
+                noiseClass.saveSnapshot();
+                System.out.println("Noise Pollution data backed up successfully.");
+                break; // Added break statement
     
             default:
-                System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+                // This case should not be reached due to validation above
+                System.out.println("An unexpected error occurred.");
                 break;
         }
-    
-        scanner.close(); // Close the scanner to prevent resource leaks
     }
-
     private static double[] getAQIValuesForHistogram() {
         List<EnvironmentalData> allData = BST.getAllData();
         List<Double> aqiValues = new ArrayList<>();
@@ -594,6 +637,7 @@ public class testBST {
     public static void restoreData() {
         BST.restoreData();
     }
+
     public static void printSelectedTree() {
         Scanner scanner = new Scanner(System.in);
         int typeChoice = 0;
@@ -655,6 +699,111 @@ public class testBST {
             }
         } catch (InvalidChoiceException e) {
             System.out.println(e.getMessage());
+        scanner.nextLine(); // Consume newline
+        
+        // Prompt for city name
+        System.out.print("Enter the city name to visualize data for: ");
+        String city = scanner.nextLine();
+
+        // Call visualization based on user choice
+        switch (choice) {
+            case 1:
+                System.out.println("Visualizing Air Quality Trends");
+                visualData.visualizeByCity(city);
+                break;
+            case 2:
+                System.out.println("Visualizing Water Quality Trends");
+                visualData.visualizeByCity(city);
+                break;
+            case 3:
+                System.out.println("Visualizing Noise Pollution Trends");
+                visualData.visualizeByCity(city);
+                break;
+            default:
+                System.out.println("Invalid choice. Please select 1, 2, or 3.");
+                break;
+        }        
+    }
+}
+
+    // Method for backing up or restoring data
+public static void backupOrRestoreData() {
+    System.out.println("What would you like to do?");
+    System.out.println("1: Backup data");
+    System.out.println("2: Restore data");
+    System.out.print("Enter your choice: ");
+    
+    // Validate input for choice
+    int choice = -1; // Initialize to an invalid value
+    while (true) {
+        try {
+            choice = scanner.nextInt();
+            if (choice < 1 || choice > 2) {
+                System.out.println("Invalid choice. Please enter 1 or 2.");
+            } else {
+                break; // Valid input
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a number.");
+            scanner.next(); // Clear the invalid input
         }
+    }
+
+    // Handle backup or restore based on user choice
+    switch (choice) {
+        case 1:
+            // Backup data
+            backupData(); // Call existing backupData method
+            break;
+        case 2:
+            // Restore data
+            restoreData(); // Call existing restoreData method
+            System.out.println("Data restored successfully.");
+            break;
+        default:
+            // This case should not be reached due to validation above
+            System.out.println("An unexpected error occurred.");
+            break;
+    }
+}
+
+
+
+    // Method to handle user input and menu navigation
+    public void run() {
+        int choice;
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    insertNewData();
+                    break;
+                case 2:
+                    updateData();
+                    break;
+                case 3:
+                    deleteData();
+                    break;
+                case 4:
+                    searchData();
+                    break;
+                case 5:
+                    displayRankings();
+                    break;
+                case 6:
+                backupOrRestoreData();
+                    break;
+                case 7:
+                    visualizeEnvironmentalData(); 
+                    break;
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 0);
     }
 }
