@@ -44,11 +44,11 @@ public class VisualData {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-
-                // Assuming the structure: "timestamp,city,value"
-                if (parts.length >= 4 && parts[1].equalsIgnoreCase(city)) { 
-                    double value = Double.parseDouble(parts[2]); // Environmental index (AQI, Water Quality, or Noise Level)
-                    Date timestamp = dateFormat.parse(parts[3]); // Timestamp
+        
+                // Assuming the structure: "timestamp,locationName,latitude,longitude,value"
+                if (parts.length >= 5 && parts[1].equalsIgnoreCase(city)) { 
+                    double value = Double.parseDouble(parts[4]); // Environmental index (AQI, Water Quality, or Noise Level)
+                    Date timestamp = dateFormat.parse(parts[0]); // Timestamp
                     
                     values.add(value);
                     timestamps.add(timestamp);

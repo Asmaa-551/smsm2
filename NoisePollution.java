@@ -130,15 +130,20 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                // Validate the number of parts
-                if (parts.length >= 4) { // Ensure this matches the actual attributes saved
-                    String locationName = parts[0];
-                    double latitude = Double.parseDouble(parts[1]);
-                    double longitude = Double.parseDouble(parts[2]);
-                    double noiseLevel = Double.parseDouble(parts[3]); // Adjust as needed
-    
-                    // Create and insert the NoisePollution object
+                
+                // Validate the number of parts, now expecting at least 5 (including timestamp)
+                if (parts.length >= 5) {
+                    String timestamp = parts[0];
+                    String locationName = parts[1];
+                    double latitude = Double.parseDouble(parts[2]);
+                    double longitude = Double.parseDouble(parts[3]);
+                    double noiseLevel = Double.parseDouble(parts[4]);
+        
+                    // Create the NoisePollution object and set the timestamp
                     NoisePollution noiseData = new NoisePollution(locationName, latitude, longitude, noiseLevel);
+                    noiseData.setMeasurementTimestamp(timestamp); // Set the timestamp
+        
+                    // Insert into the NoisePollution BST
                     noisePollutionBST.insert(noiseData);
                 } else {
                     System.out.println("Invalid data format in line: " + line);

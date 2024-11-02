@@ -747,4 +747,49 @@ public static void backupOrRestoreData() {
             break;
     }
 }
+<<<<<<< HEAD
+=======
+
+
+
+    // Method to handle user input and menu navigation
+    public void run() {
+        int choice;
+        do {
+            displayMenu();
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    insertNewData();
+                    break;
+                case 2:
+                    updateData();
+                    break;
+                case 3:
+                    deleteData();
+                    break;
+                case 4:
+                    searchData();
+                    break;
+                case 5:
+                    displayRankings();
+                    break;
+                case 6:
+                backupOrRestoreData();
+                    break;
+                case 7:
+                    visualizeEnvironmentalData(); 
+                    break;
+                case 9:
+                    printSelectedTree();
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 0);
+    }
+>>>>>>> 658dd1ac8dede9af0a9aadfa42642067647e57da
 }
