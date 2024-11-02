@@ -108,12 +108,9 @@ public class testBST {
                             typeChoice = scanner.nextInt();
                             scanner.nextLine(); // Consume newline after int
                     
-                            if (typeChoice >= 1 && typeChoice <= 3) {
+                            if (typeChoice < 1 && typeChoice > 3) {
                                 break; // Valid choice, exit loop
-                            } else {
-                                System.out.println("Invalid choice. Please select a number between 1 and 3.");
                             }
-                    
                             // Gather common data for all types, with validation
                             System.out.println("Enter the location name:");
                             String locationName = scanner.nextLine().trim();
@@ -750,44 +747,4 @@ public static void backupOrRestoreData() {
             break;
     }
 }
-
-
-
-    // Method to handle user input and menu navigation
-    public void run() {
-        int choice;
-        do {
-            displayMenu();
-            System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            switch (choice) {
-                case 1:
-                    insertNewData();
-                    break;
-                case 2:
-                    updateData();
-                    break;
-                case 3:
-                    deleteData();
-                    break;
-                case 4:
-                    searchData();
-                    break;
-                case 5:
-                    displayRankings();
-                    break;
-                case 6:
-                backupOrRestoreData();
-                    break;
-                case 7:
-                    visualizeEnvironmentalData(); 
-                    break;
-                case 0:
-                    System.out.println("Exiting...");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-        } while (choice != 0);
-    }
 }
