@@ -129,13 +129,15 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts.length >= 4) { // Update to match the number of parts written in saveSnapshot
-                    String locationName = parts[0];
-                    double latitude = Double.parseDouble(parts[1]);
-                    double longitude = Double.parseDouble(parts[2]);
-                    double waterQualityIndex = Double.parseDouble(parts[3]);
+                if (parts.length >= 5) { // Adjusted to match the number of fields with timestamp included
+                    String timestamp = parts[0];
+                    String locationName = parts[1];
+                    double latitude = Double.parseDouble(parts[2]);
+                    double longitude = Double.parseDouble(parts[3]);
+                    double waterQualityIndex = Double.parseDouble(parts[4]);
     
                     WaterQuality waterQualityData = new WaterQuality(locationName, latitude, longitude, waterQualityIndex);
+                    waterQualityData.setMeasurementTimestamp(timestamp); // Set the timestamp for the restored data
                     waterQualityBST.insert(waterQualityData); // Insert into the WaterQuality BST
                 }
             }

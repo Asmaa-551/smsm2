@@ -137,15 +137,21 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                // Ensure that the parts length matches your save method structure
-                if (parts.length >= 4) { // Adjust to your actual number of attributes
-                    String locationName = parts[0];
-                    double latitude = Double.parseDouble(parts[1]);
-                    double longitude = Double.parseDouble(parts[2]);
-                    int aqi = Integer.parseInt(parts[3]); // Ensure this matches your saved structure
-    
+                
+                // Ensure the parts length matches the structure with timestamp included
+                if (parts.length >= 5) { // Adjusted for timestamp + 4 other attributes
+                    String timestamp = parts[0];
+                    String locationName = parts[1];
+                    double latitude = Double.parseDouble(parts[2]);
+                    double longitude = Double.parseDouble(parts[3]);
+                    int aqi = Integer.parseInt(parts[4]);
+        
+                    // Create the AirQuality object and set the timestamp
                     AirQuality airQualityData = new AirQuality(locationName, latitude, longitude, aqi);
-                    airQualityBST.insert(airQualityData); // Insert into the AirQuality BST
+                    airQualityData.setMeasurementTimestamp(timestamp); // Set the timestamp
+        
+                    // Insert into the AirQuality BST
+                    airQualityBST.insert(airQualityData);
                 }
             }
         } catch (IOException e) {

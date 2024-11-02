@@ -88,21 +88,23 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
 
         if (node.element instanceof AirQuality) {
             AirQuality airData = (AirQuality) node.element;
-            writer.write(airData.getLocationName() + "," + airData.getLatitude() + "," + airData.getLongitude() + "," 
-                         + airData.getAqi());
+            writer.write(airData.getMeasurementTimestamp() + "," + airData.getLocationName() + "," 
+                         + airData.getLatitude() + "," + airData.getLongitude() + "," + airData.getAqi());
             writer.newLine();
         } else if (node.element instanceof WaterQuality) {
             WaterQuality waterData = (WaterQuality) node.element;
-            writer.write(waterData.getLocationName() + "," + waterData.getLatitude() + "," + waterData.getLongitude() + "," 
+            writer.write(waterData.getMeasurementTimestamp() + "," + waterData.getLocationName() + "," 
+                         + waterData.getLatitude() + "," + waterData.getLongitude() + "," 
                          + waterData.getWaterQualityIndex());
             writer.newLine();
         } else if (node.element instanceof NoisePollution) { 
             NoisePollution noiseData = (NoisePollution) node.element;
-            writer.write(noiseData.getLocationName() + "," + noiseData.getLatitude() + "," + noiseData.getLongitude() + "," 
+            writer.write(noiseData.getMeasurementTimestamp() + "," + noiseData.getLocationName() + "," 
+                         + noiseData.getLatitude() + "," + noiseData.getLongitude() + "," 
                          + noiseData.getNoiseLevel());
             writer.newLine();
         }
-
+        
         saveSnapshotRec(node.right, writer);
     }
     //restorsion 
