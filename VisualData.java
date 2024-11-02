@@ -9,6 +9,8 @@ import java.util.List;
 
 public class VisualData {
     private EnvironmentalBST environmentalBST;
+    private List<Double> values = new ArrayList<>();  // Keep track of all values across multiple files
+    private List<Date> timestamps = new ArrayList<>(); // Keep track of all timestamps across multiple files
 
     // Constructor to initialize with EnvironmentalBST instance
     public VisualData(EnvironmentalBST environmentalBST) {
@@ -17,46 +19,49 @@ public class VisualData {
 
     // Method to visualize data trend for a specific parameter (air, water, or noise) for a city
     public void visualizeByCityUsingSnapshot(String city, String type) {
-        String filename = "";
-
-        // Determine the snapshot file based on the type
-        switch (type.toLowerCase()) {
-            case "air":
-                filename = "air_copy_" + EnvironmentalBST.getAirSnapshotIndex() + ".txt";
-                break;
-            case "water":
-                filename = "water_copy_" + EnvironmentalBST.getWaterSnapshotIndex() + ".txt";
-                break;
-            case "noise":
-                filename = "noise_copy_" + EnvironmentalBST.getNoiseSnapshotIndex() + ".txt";
-                break;
-            default:
-                System.out.println("Invalid type. Please choose 'air', 'water', or 'noise'.");
-                return;
-        }
+        String filename = determineFilename(type);
 
         // Read data from the snapshot file for the specified city and parameter type
-        List<Double> values = new ArrayList<>();
-        List<Date> timestamps = new ArrayList<>();
+        if (filename.isEmpty()) {
+            System.out.println("Invalid type. Please choose 'air', 'water', or 'noise'.");
+            return;
+        }
+
+        loadDataFromFile(filename, city);
+        plotEnvironmentalTrend(type + " Quality Index Over Time for " + city, values, timestamps);
+    }
+
+    // Method to determine the filename based on the parameter type
+    private String determineFilename(String type) {
+        switch (type.toLowerCase()) {
+            case "air":
+                return "air_copy_" + EnvironmentalBST.getAirSnapshotIndex() + ".txt";
+            case "water":
+                return "water_copy_" + EnvironmentalBST.getWaterSnapshotIndex() + ".txt";
+            case "noise":
+                return "noise_copy_" + EnvironmentalBST.getNoiseSnapshotIndex() + ".txt";
+            default:
+                return "";
+        }
+    }
+
+    private void loadDataFromFile(String filename, String city) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-        
+
                 // Assuming the structure: "timestamp,locationName,latitude,longitude,value"
-                if (parts.length >= 5 && parts[1].equalsIgnoreCase(city)) { 
-                    double value = Double.parseDouble(parts[4]); // Environmental index (AQI, Water Quality, or Noise Level)
+                if (parts.length >= 5 && parts[1].equalsIgnoreCase(city)) {
+                    double value = Double.parseDouble(parts[4]); // Environmental index
                     Date timestamp = dateFormat.parse(parts[0]); // Timestamp
-                    
-                    values.add(value);
-                    timestamps.add(timestamp);
+
+                    values.add(value);        // Append new value
+                    timestamps.add(timestamp); // Append new timestamp
                 }
             }
-
-            plotEnvironmentalTrend(type + " Quality Index Over Time for " + city, values, timestamps);
-
         } catch (IOException | ParseException e) {
             System.out.println("Error reading snapshot file: " + e.getMessage());
         }
@@ -70,6 +75,5 @@ public class VisualData {
         for (int i = 0; i < values.size(); i++) {
             System.out.println(dateFormat.format(timestamps.get(i)) + " - " + values.get(i));
         }
-
     }
 }
