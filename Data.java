@@ -26,6 +26,10 @@ public class Data {
                         NoisePollution noisePollutionData = new NoisePollution(locationName, latitude, longitude, level);
                         NoisePollution.noisePollutionBST.insert(noisePollutionData);
                         System.out.println("Loaded noise pollution data for " + locationName);
+                    } else if (type.equalsIgnoreCase("Water")) { // Added for Water Quality
+                        WaterQuality waterQualityData = new WaterQuality(locationName, latitude, longitude, (int) level);
+                        WaterQuality.waterQualityBST.insert(waterQualityData);
+                        System.out.println("Loaded water quality data for " + locationName);
                     } else {
                         System.out.println("Unknown data type for line: " + line);
                     }
