@@ -1,6 +1,11 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class VisualData {
     private EnvironmentalBST environmentalBST;
@@ -10,33 +15,61 @@ public class VisualData {
         this.environmentalBST = environmentalBST;
     }
 
-    // Method to visualize data for a single city
-    public void visualizeByCity(String city) {
-        EnvironmentalData data = environmentalBST.searchByLocation(city);
+    // Method to visualize data trend for a specific parameter (air, water, or noise) for a city
+    public void visualizeByCityUsingSnapshot(String city, String type) {
+        String filename = "";
 
-        if (data instanceof AirQuality || data instanceof WaterQuality || data instanceof NoisePollution) {
-            System.out.println("Visualizing data for: " + city);
-            
-            if (data instanceof AirQuality) {
-                plotEnvironmentalParameter("Air Quality Index (AQI)", ((AirQuality) data).getAqi(), data.getMeasurementTimestamp());
-            } else if (data instanceof WaterQuality) {
-                plotEnvironmentalParameter("Water Quality Index", ((WaterQuality) data).getWaterQualityIndex(), data.getMeasurementTimestamp());
-            } else if (data instanceof NoisePollution) {
-                plotEnvironmentalParameter("Noise Level", ((NoisePollution) data).getNoiseLevel(), data.getMeasurementTimestamp());
+        // Determine the snapshot file based on the type
+        switch (type.toLowerCase()) {
+            case "air":
+                filename = "air_copy_" + EnvironmentalBST.getAirSnapshotIndex() + ".txt";
+                break;
+            case "water":
+                filename = "water_copy_" + EnvironmentalBST.getWaterSnapshotIndex() + ".txt";
+                break;
+            case "noise":
+                filename = "noise_copy_" + EnvironmentalBST.getNoiseSnapshotIndex() + ".txt";
+                break;
+            default:
+                System.out.println("Invalid type. Please choose 'air', 'water', or 'noise'.");
+                return;
+        }
+
+        // Read data from the snapshot file for the specified city and parameter type
+        List<Double> values = new ArrayList<>();
+        List<Date> timestamps = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+
+                // Assuming the structure: "timestamp,city,value"
+                if (parts.length >= 4 && parts[1].equalsIgnoreCase(city)) { 
+                    double value = Double.parseDouble(parts[2]); // Environmental index (AQI, Water Quality, or Noise Level)
+                    Date timestamp = dateFormat.parse(parts[3]); // Timestamp
+                    
+                    values.add(value);
+                    timestamps.add(timestamp);
+                }
             }
-        } else {
-            System.out.println("Data for city " + city + " is incomplete or unavailable.");
+
+            plotEnvironmentalTrend(type + " Quality Index Over Time for " + city, values, timestamps);
+
+        } catch (IOException | ParseException e) {
+            System.out.println("Error reading snapshot file: " + e.getMessage());
         }
     }
 
-    private void plotEnvironmentalParameter(String parameter, double value, String timestamp) {
+    // Method to plot environmental data trend (simplified for demonstration)
+    private void plotEnvironmentalTrend(String title, List<Double> values, List<Date> timestamps) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        
-        try {
-            Date date = dateFormat.parse(timestamp);  // Convert string to Date
-            System.out.println("Plotting " + parameter + " at " + dateFormat.format(date) + ": " + value);
-        } catch (ParseException e) {
-            System.out.println("Error parsing timestamp: " + timestamp);
+        System.out.println("Plotting " + title);
+
+        for (int i = 0; i < values.size(); i++) {
+            System.out.println(dateFormat.format(timestamps.get(i)) + " - " + values.get(i));
         }
+
     }
 }
