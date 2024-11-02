@@ -165,7 +165,7 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     @Override
     public void displayCityAndQI() {
         System.out.println("  City: " + getLocationName());
-        System.out.println("  Noise Level: " + getWaterQualityIndex());
+        System.out.println("  WQI: " + getWaterQualityIndex());
     }
 
     public List<Double> getWaterQualityIndexHistory() {

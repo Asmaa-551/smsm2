@@ -556,20 +556,14 @@ public class testBST {
 
         switch (choice) {
             case 1:
-                System.out.println("Air Quality Rankings (Best to Worst):");
                 airClass.displayRankings(); // Assuming reverseInorder method exists
-                System.out.println("Water Quality Rankings (Best to Worst):");
                 waterClass.displayRankings();
-                System.out.println("Noise Pollution Rankings (Best to Worst):");
                 noiseClass.displayRankings();
                 break;
 
             case 2:
-                System.out.println("Air Quality Rankings (Worst to Best):");
                 airClass.displayRankingsReverse(); // Assuming inorder method exists
-                System.out.println("Water Quality Rankings (Worst to Best):");
                 waterClass.displayRankingsReverse();
-                System.out.println("Noise Pollution Rankings (Worst to Best):");
                 noiseClass.displayRankingsReverse();
                 break;
 
