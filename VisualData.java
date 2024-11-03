@@ -17,33 +17,30 @@ public class VisualData {
         this.environmentalBST = environmentalBST;
     }
 
-    
+    // A method for displaying environmental quality statistics for a city using stored snapshots
     public void visualizeByCityUsingSnapshot(String city, String type) {
         int snapshotIndex = 1;  
 
         
         while (true) {
             String filename = determineFilename(type, snapshotIndex);
-    
-            
             if (filename.isEmpty()) {
                 System.out.println("Invalid type. Please choose 'air', 'water', or 'noise'.");
                 return;
             }
-    
-            
             if (!loadDataFromFile(filename, city)) {
                 
                 break;
             }
     
-            snapshotIndex++;  
+            snapshotIndex++;  // Advance to the next snapshot file.
         }
     
         
         plotEnvironmentalTrend(type + " Quality Index Over Time for " + city, values, timestamps);
     }
 
+    // function for determining the filename of each photo based on its type and index.
     private String determineFilename(String type, int index) {
         switch (type.toLowerCase()) {
             case "air":
@@ -66,7 +63,7 @@ public class VisualData {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 
-                
+                // Determine if the line has enough sections and if the city matches.
                 if (parts.length >= 5 && parts[1].equalsIgnoreCase(city)) {
                     double value = Double.parseDouble(parts[4]); 
                     Date timestamp = dateFormat.parse(parts[0]); 
@@ -82,7 +79,7 @@ public class VisualData {
         return dataLoaded;
     }
 
-   
+   // Plots environmental quality data by publishing each timestamp and associated value.
     private void plotEnvironmentalTrend(String title, List<Double> values, List<Date> timestamps) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Plotting " + title);
