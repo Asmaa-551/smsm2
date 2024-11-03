@@ -225,11 +225,11 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
     }
    
     /* Inorder traversal from a subtree */
-    protected void inorder(TreeNode<EnvironmentalData> root) {
-        if (root == null) return;
-        inorder(root.left);
-        System.out.print("(" + root.element + ") ");
-        inorder(root.right);
+    protected void inorder(TreeNode<EnvironmentalData> node) {
+        if (node == null) return;
+        inorder(node.left);
+        node.element.displayCityAndQI();
+        inorder(node.right);
     }
     public List<EnvironmentalData> getAllData() {
         List<EnvironmentalData> dataList = new ArrayList<>();
