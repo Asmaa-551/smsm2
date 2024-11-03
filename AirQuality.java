@@ -11,8 +11,8 @@ import java.util.List;
 public class AirQuality extends EnvironmentalData implements DataOperations {
     private int aqi;
     public static EnvironmentalBST airQualityBST = new EnvironmentalBST();
-    private List<Double> aqiHistory; // List to store historical AQI values
-    private List<Date> timestampHistory; // List to store corresponding timestamps
+    private List<Double> aqiHistory; 
+    private List<Date> timestampHistory; 
 
 
     // Constructor
@@ -24,7 +24,7 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     }
     public AirQuality(){}
 
-    // Getter and Setter for AQI
+    
     public int getAqi() {
         return aqi;
     }
@@ -33,7 +33,7 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         this.aqi = aqi;
     }
 
-    // Implementing DataOperations methods
+    // Update or add data to BST if it already exists.
     @Override
     public void insert(EnvironmentalData data) {
         if (data instanceof AirQuality) {
@@ -51,6 +51,7 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         }
     }
 
+    // Update the AQI of a location's current data
     @Override
     public void update(String location, double newValue) {
         AirQuality existingData = (AirQuality) search(location);
@@ -64,7 +65,6 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
 
     @Override
     public EnvironmentalData search(String location) {
-        // Traverse the BST to find the AirQuality data based on the location
         return airQualityBST.searchByLocation(location);
     }
 
@@ -85,6 +85,7 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         airQualityBST.inorder();
     }
 
+    // Provide comprehensive details about a single data entry
     @Override
     public void displayInfo() {
         System.out.println("Air Quality Data for " + getLocationName() + ":");
@@ -110,12 +111,12 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         if (o instanceof AirQuality) {
             AirQuality other = (AirQuality) o;
             if (this.aqi <= other.aqi) {
-                return -1; // `this` is less than `other`
+                return -1; 
             } else if (this.aqi > other.aqi) {
-                return 1; // `this` is greater than `other`
+                return 1; 
             }
         }
-        return 1; // Default for non-AirQuality comparisons
+        return 1; 
     }
 
     @Override
@@ -134,29 +135,30 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         airQualityBST.reverseInorder();
     }
     
+    // Snapshot restoration for a given index.
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "air_copy_" + snapshotIndex + ".txt";
-        airQualityBST.clear(); // Clear existing air quality data before restoring
+        airQualityBST.clear(); 
 
-        // Restore data from the snapshot
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 
-                // Ensure the parts length matches the structure with timestamp included
-                if (parts.length >= 5) { // Adjusted for timestamp + 4 other attributes
+                // Parse and add data from snapshot files to BST.
+                if (parts.length >= 5) { 
                     String timestamp = parts[0];
                     String locationName = parts[1];
                     double latitude = Double.parseDouble(parts[2]);
                     double longitude = Double.parseDouble(parts[3]);
                     int aqi = Integer.parseInt(parts[4]);
         
-                    // Create the AirQuality object and set the timestamp
+                    
                     AirQuality airQualityData = new AirQuality(locationName, latitude, longitude, aqi);
                     airQualityData.setMeasurementTimestamp(timestamp); // Set the timestamp
         
-                    // Insert into the AirQuality BST
+                    
                     airQualityBST.insert(airQualityData);
                 }
             }
@@ -167,7 +169,8 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
             System.out.println("Error parsing numeric values from the snapshot: " + e.getMessage());
         }
     }
-    
+
+    // Use rotating storage to save snapshots.
     public void saveSnapshot() {
     airQualityBST.saveRotatingSnapshot();
     }
@@ -188,29 +191,30 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         System.out.println("Air Quality Data Tree:");
         airQualityBST.print("", airQualityBST.getRoot(), false);
     }
+    // Remove data older than 30 days from the BST.
     public void deleteOldData() {
         LocalDateTime now = LocalDateTime.now();
-        Duration maxAge = Duration.ofDays(30); // Duration set to 30 days
-        List<String> oldLocations = new ArrayList<>(); // To store locations of old data
+        Duration maxAge = Duration.ofDays(30); 
+        List<String> oldLocations = new ArrayList<>(); 
 
-        // Traverse each location in sortedLocationsWater
+        
         for (String location : sortedLocationsAir) {
             AirQuality data = (AirQuality) airQualityBST.searchByLocation(location);
             if (data != null) {
                 LocalDateTime dataTimestamp = data.getTimestampForComparison();
-                // Check if data is older than maxAge
+               
                 if (dataTimestamp != null && Duration.between(dataTimestamp, now).compareTo(maxAge) > 0) {
-                    oldLocations.add(location); // Collect old data for removal
+                    oldLocations.add(location); 
                 }
             }
         }
 
-        // Remove old data from both the BST and sorted locations
+        // Remove obsolete data entries from BST
         for (String location : oldLocations) {
             AirQuality data = (AirQuality) airQualityBST.searchByLocation(location);
             if (data != null) {
-                airQualityBST.delete(data); // Delete from BST
-                sortedLocationsWater.remove(location); // Remove from sorted list
+                airQualityBST.delete(data); 
+                sortedLocationsWater.remove(location); 
                 System.out.println("Deleted old data for location: " + location);
             }
         }

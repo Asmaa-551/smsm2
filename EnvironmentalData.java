@@ -10,12 +10,12 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
     public static ArrayList<String> sortedLocationsAir = new ArrayList<>();
     public static ArrayList<String> sortedLocationsNoise = new ArrayList<>();
 
-    private String locationName; // Name of the geographical location
-    private double latitude; // Latitude of the location
-    private double longitude; // Longitude of the location
-    private String measurementTimestamp; // Timestamp of the measurement
+    private String locationName; 
+    private double latitude; 
+    private double longitude; 
+    private String measurementTimestamp; 
 
-    // Constructor to initialize common attributes
+    // Constructor 
     public EnvironmentalData(String locationName, double latitude, double longitude) {
         this.locationName = locationName;
         this.latitude = latitude;
@@ -27,7 +27,7 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
     @Override
     public abstract int compareTo(EnvironmentalData o);
 
-    // Getters and Setters
+    
     public String getLocationName() {
         return locationName;
     }
@@ -60,13 +60,13 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
         this.measurementTimestamp = measurementTimestamp;
     }
 
-    // Abstract method to get the measurement value
+    // Abstract method
     public abstract double getMeasurementValue();
 
-    // Abstract method to update the measurement
+    // Abstract method 
     public abstract void updateMeasurement(double newValue);
 
-    // Method to display information about the environmental data
+    //Display information 
     public void displayInfo() {
         System.out.println("Location: " + locationName);
         System.out.println("Coordinates: (" + latitude + ", " + longitude + ")");
@@ -83,18 +83,18 @@ public abstract class EnvironmentalData implements Comparable<EnvironmentalData>
     }
 
 
-    // Method to convert formatted timestamp back to LocalDateTime for comparison
+    // Convert formatted timestamp to LocalDateTime 
     public LocalDateTime getTimestampForComparison() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         try {
             return LocalDateTime.parse(measurementTimestamp, formatter);
         } catch (DateTimeParseException e) {
-            // Handle parsing error if needed
-            return null; // or throw an exception, depending on your error handling strategy
+            
+            return null; 
         }
     }
 
-    // Example method for comparison
+    // Example
     public boolean isMoreRecentThan(EnvironmentalData other) {
         LocalDateTime thisTimestamp = this.getTimestampForComparison();
         LocalDateTime otherTimestamp = other.getTimestampForComparison();

@@ -10,8 +10,8 @@ import java.util.List;
 public class NoisePollution extends EnvironmentalData implements DataOperations {
     private double noiseLevel;
     public static EnvironmentalBST noisePollutionBST = new EnvironmentalBST();
-    private List<Double> noiseLevelHistory; // List to store historical noise levels
-    private List<Date> timestampHistory; // List to store corresponding timestamps
+    private List<Double> noiseLevelHistory; 
+    private List<Date> timestampHistory; 
 
     // Constructor
     public NoisePollution(String locationName, double latitude, double longitude, double noiseLevel) {
@@ -22,7 +22,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     }
     public NoisePollution(){}
 
-    // Getter and Setter for Noise Level
+    
     public double getNoiseLevel() {
         return noiseLevel;
     }
@@ -31,7 +31,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
         this.noiseLevel = noiseLevel;
     }
 
-    // Implementing DataOperations methods
+    
     @Override
     public void insert(EnvironmentalData data) {
         if (data instanceof NoisePollution) {
@@ -53,7 +53,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public void update(String location, double newValue) {
         NoisePollution existingData = (NoisePollution) search(location);
         if (existingData != null) {
-            existingData.setNoiseLevel(newValue); // Update the noise level
+            existingData.setNoiseLevel(newValue); 
             System.out.println("Updated noise pollution data for " + location);
         } else {
             System.out.println("Location not found for update: " + location);
@@ -108,7 +108,7 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
             NoisePollution other = (NoisePollution) o;
             return Double.compare(this.noiseLevel, other.noiseLevel);
         }
-        return 1; // Default for non-NoisePollution comparisons
+        return 1; 
     }
 
     @Override
@@ -128,15 +128,14 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     }
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "noise_copy" + snapshotIndex + ".txt";
-        noisePollutionBST.clear(); // Clear existing noise pollution data before restoring
+        noisePollutionBST.clear(); 
     
-        // Restore data from the snapshot
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 
-                // Validate the number of parts, now expecting at least 5 (including timestamp)
+                
                 if (parts.length >= 5) {
                     String timestamp = parts[0];
                     String locationName = parts[1];
@@ -144,11 +143,11 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
                     double longitude = Double.parseDouble(parts[3]);
                     double noiseLevel = Double.parseDouble(parts[4]);
         
-                    // Create the NoisePollution object and set the timestamp
+                    
                     NoisePollution noiseData = new NoisePollution(locationName, latitude, longitude, noiseLevel);
-                    noiseData.setMeasurementTimestamp(timestamp); // Set the timestamp
+                    noiseData.setMeasurementTimestamp(timestamp); 
         
-                    // Insert into the NoisePollution BST
+                    
                     noisePollutionBST.insert(noiseData);
                 } else {
                     System.out.println("Invalid data format in line: " + line);
@@ -186,27 +185,27 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
 
     public void deleteOldData() {
         LocalDateTime now = LocalDateTime.now();
-        Duration maxAge = Duration.ofDays(30); // Duration set to 30 days
-        List<String> oldLocations = new ArrayList<>(); // To store locations of old data
+        Duration maxAge = Duration.ofDays(30); 
+        List<String> oldLocations = new ArrayList<>(); 
 
-        // Traverse each location in sortedLocationsWater
+        
         for (String location : sortedLocationsNoise) {
             NoisePollution data = (NoisePollution) noisePollutionBST.searchByLocation(location);
             if (data != null) {
                 LocalDateTime dataTimestamp = data.getTimestampForComparison();
-                // Check if data is older than maxAge
+                
                 if (dataTimestamp != null && Duration.between(dataTimestamp, now).compareTo(maxAge) > 0) {
-                    oldLocations.add(location); // Collect old data for removal
+                    oldLocations.add(location); 
                 }
             }
         }
 
-        // Remove old data from both the BST and sorted locations
+        
         for (String location : oldLocations) {
             NoisePollution data = (NoisePollution) noisePollutionBST.searchByLocation(location);
             if (data != null) {
-                noisePollutionBST.delete(data); // Delete from BST
-                sortedLocationsWater.remove(location); // Remove from sorted list
+                noisePollutionBST.delete(data); 
+                sortedLocationsWater.remove(location); 
                 System.out.println("Deleted old data for location: " + location);
             }
         }

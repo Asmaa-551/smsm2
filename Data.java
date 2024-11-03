@@ -11,13 +11,13 @@ public class Data {
                 String[] parts = line.split(",");
                 
                 if (parts.length >= 5) {
-                    String type = parts[0].trim(); // First part specifies the type (e.g., "Air" or "Noise")
+                    String type = parts[0].trim(); 
                     String locationName = parts[1].trim();
                     double latitude = Double.parseDouble(parts[2].trim());
                     double longitude = Double.parseDouble(parts[3].trim());
-                    double level = Double.parseDouble(parts[4].trim()); // AQI or noise level
+                    double level = Double.parseDouble(parts[4].trim()); 
                     
-                    // Instantiate based on type and add to respective BST
+                    
                     if (type.equalsIgnoreCase("Air")) {
                         AirQuality airQualityData = new AirQuality(locationName, latitude, longitude, (int) level);
                         AirQuality.airQualityBST.insert(airQualityData);
@@ -26,7 +26,7 @@ public class Data {
                         NoisePollution noisePollutionData = new NoisePollution(locationName, latitude, longitude, level);
                         NoisePollution.noisePollutionBST.insert(noisePollutionData);
                         System.out.println("Loaded noise pollution data for " + locationName);
-                    } else if (type.equalsIgnoreCase("Water")) { // Added for Water Quality
+                    } else if (type.equalsIgnoreCase("Water")) { 
                         WaterQuality waterQualityData = new WaterQuality(locationName, latitude, longitude, (int) level);
                         WaterQuality.waterQualityBST.insert(waterQualityData);
                         System.out.println("Loaded water quality data for " + locationName);

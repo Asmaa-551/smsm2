@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class EnvironmentalBST extends BST<EnvironmentalData> {
-    private static int airSnapshotIndex = 0; // To keep track of Air Quality snapshots
-    private static int waterSnapshotIndex = 0; // To keep track of Water Quality snapshots
-    private static int noiseSnapshotIndex = 0; // To keep track of Noise Pollution snapshots
+    private static int airSnapshotIndex = 0; 
+    private static int waterSnapshotIndex = 0; 
+    private static int noiseSnapshotIndex = 0; 
 
     public EnvironmentalBST() {}
 
@@ -45,10 +45,10 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
     public void saveRotatingSnapshot() {
         String filename = "";
 
-        // Determine the appropriate filename based on the type of data in the tree
+        
         if (root != null && root.element instanceof AirQuality) {
             airSnapshotIndex++;
-            filename = "air_copy_" + airSnapshotIndex + ".txt"; // Use the index for the filename
+            filename = "air_copy_" + airSnapshotIndex + ".txt"; 
         } else if (root != null && root.element instanceof WaterQuality) {
             waterSnapshotIndex++;
             filename = "water_copy_" + waterSnapshotIndex + ".txt";
@@ -60,9 +60,9 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
             return;
         }
 
-        // Save the snapshot using the generated filename
+       
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            saveSnapshotRec(root, writer); // Call the existing method directly to save data
+            saveSnapshotRec(root, writer); 
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,58 +107,55 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         
         saveSnapshotRec(node.right, writer);
     }
-    //restorsion 
+    
     public void restoreData() {
         Scanner scanner = new Scanner(System.in);
     
-        // Prompt user to choose the data type to restore
+       
         System.out.println("Choose the data type to restore (1: Air Quality, 2: Water Quality, 3: Noise Pollution): ");
         int choice = scanner.nextInt();
     
         int snapshotIndex;
     
-        // Display available snapshot options based on the user's choice
         switch (choice) {
             case 1:
-                // Display Air Quality snapshots if the user chooses Air Quality
                 displayAirSnapshotOptions();
                 System.out.println("Enter the snapshot copy number to restore: ");
                 snapshotIndex = scanner.nextInt();
     
-                // Validate the snapshot index for Air Quality
                 if (!isValidAirSnapshotIndex(snapshotIndex)) {
                     System.out.println("Invalid snapshot index for Air Quality. Please enter a valid index.");
                     return;
                 }
-                testBST.airClass.restoreSnapshot(snapshotIndex); // Using snapshotIndex - 1 to adjust for 0-based index
+                testBST.airClass.restoreSnapshot(snapshotIndex); 
                 break;
     
             case 2:
-                // Display Water Quality snapshots if the user chooses Water Quality
+                
                 displayWaterSnapshotOptions();
                 System.out.println("Enter the snapshot copy number to restore: ");
                 snapshotIndex = scanner.nextInt();
     
-                // Validate the snapshot index for Water Quality
+                
                 if (!isValidWaterSnapshotIndex(snapshotIndex)) {
                     System.out.println("Invalid snapshot index for Water Quality. Please enter a valid index.");
                     return;
                 }
-                testBST.waterClass.restoreSnapshot(snapshotIndex); // Using snapshotIndex - 1 to adjust for 0-based index
+                testBST.waterClass.restoreSnapshot(snapshotIndex); 
                 break;
     
             case 3:
-                // Display Noise Pollution snapshots if the user chooses Noise Pollution
+                
                 displayNoiseSnapshotOptions();
                 System.out.println("Enter the snapshot copy number to restore: ");
                 snapshotIndex = scanner.nextInt();
     
-                // Validate the snapshot index for Noise Pollution
+                
                 if (!isValidNoiseSnapshotIndex(snapshotIndex)) {
                     System.out.println("Invalid snapshot index for Noise Pollution. Please enter a valid index.");
                     return;
                 }
-                testBST.noiseClass.restoreSnapshot(snapshotIndex); // Using snapshotIndex - 1 to adjust for 0-based index
+                testBST.noiseClass.restoreSnapshot(snapshotIndex); 
                 break;
     
             default:
@@ -166,7 +163,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         }
     }
     
-    // Method to display available air snapshot options
+    
     private void displayAirSnapshotOptions() {
         if (airSnapshotIndex == 0) {
             System.out.println("No Air Quality snapshots available.");
@@ -178,35 +175,35 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         }
     }
     
-    // Method to display available water snapshot options
+   
     private void displayWaterSnapshotOptions() {
         System.out.println("Available Water Quality snapshots: ");
-        for (int i = 0; i < waterSnapshotIndex; i++) { // Use waterSnapshotIndex to determine available snapshots
-            System.out.println("Water Copy " + (i + 1)); // Displaying the snapshots as 1-based index
+        for (int i = 0; i < waterSnapshotIndex; i++) { 
+            System.out.println("Water Copy " + (i + 1)); 
         }
     }
     
-    // Method to display available noise snapshot options
+    
     private void displayNoiseSnapshotOptions() {
         System.out.println("Available Noise Pollution snapshots: ");
-        for (int i = 0; i < noiseSnapshotIndex; i++) { // Use noiseSnapshotIndex to determine available snapshots
-            System.out.println("Noise Copy " + (i + 1)); // Displaying the snapshots as 1-based index
+        for (int i = 0; i < noiseSnapshotIndex; i++) { 
+            System.out.println("Noise Copy " + (i + 1)); 
         }
     }
     
-    // Method to check if the snapshot index is valid for Air Quality
+    
     private boolean isValidAirSnapshotIndex(int index) {
-        return index > 0 && index <= airSnapshotIndex; // Adjust based on how you count snapshots
+        return index > 0 && index <= airSnapshotIndex; 
     }
     
-    // Method to check if the snapshot index is valid for Water Quality
+    
     private boolean isValidWaterSnapshotIndex(int index) {
-        return index > 0 && index <= waterSnapshotIndex; // Adjust based on how you count snapshots
+        return index > 0 && index <= waterSnapshotIndex; 
     }
     
-    // Method to check if the snapshot index is valid for Noise Pollution
+    
     private boolean isValidNoiseSnapshotIndex(int index) {
-        return index > 0 && index <= noiseSnapshotIndex; // Adjust based on how you count snapshots
+        return index > 0 && index <= noiseSnapshotIndex; 
     }
     public void reverseInorder() {
         reverseInorder(root);
@@ -219,12 +216,12 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         reverseInorder(node.left);
     }
 
-    @Override /* Inorder traversal from the root */
+    @Override 
     public void inorder() {
          inorder(root);
     }
    
-    /* Inorder traversal from a subtree */
+   
     protected void inorder(TreeNode<EnvironmentalData> node) {
         if (node == null) return;
         inorder(node.left);
@@ -233,17 +230,17 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
     }
     public List<EnvironmentalData> getAllData() {
         List<EnvironmentalData> dataList = new ArrayList<>();
-        collectAllData(root, dataList); // Call the helper method to populate dataList
-        return dataList; // Return the populated list
+        collectAllData(root, dataList); 
+        return dataList; 
     }
 
-    // Helper method to perform in-order traversal and collect all data
+  
     private void collectAllData(TreeNode<EnvironmentalData> node, List<EnvironmentalData> dataList) {
         if (node == null) {
-            return; // Base case: if the node is null, return
+            return; 
         }
-        collectAllData(node.left, dataList); // Traverse left subtree
-        dataList.add(node.element); // Add the current node's data to the list
-        collectAllData(node.right, dataList); // Traverse right subtree
+        collectAllData(node.left, dataList); 
+        dataList.add(node.element); 
+        collectAllData(node.right, dataList); 
     }
 }
