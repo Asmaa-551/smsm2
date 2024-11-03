@@ -19,18 +19,32 @@ public class VisualData {
 
     // Method to visualize data trend for a specific parameter (air, water, or noise) for a city
     public void visualizeByCityUsingSnapshot(String city, String type) {
-        String filename = determineFilename(type);
+        int snapshotIndex = 1;  // Start with the first snapshot file index
 
-        // Read data from the snapshot file for the specified city and parameter type
-        if (filename.isEmpty()) {
-            System.out.println("Invalid type. Please choose 'air', 'water', or 'noise'.");
-            return;
+        // Loop through all available snapshot files for the specified type
+        while (true) {
+            String filename = determineFilename(type, snapshotIndex);
+    
+            // Check if filename is empty (invalid type) or file does not exist
+            if (filename.isEmpty()) {
+                System.out.println("Invalid type. Please choose 'air', 'water', or 'noise'.");
+                return;
+            }
+    
+            // Attempt to load data from the snapshot file for the specified city
+            if (!loadDataFromFile(filename, city)) {
+                // Exit the loop when no more files are available
+                break;
+            }
+    
+            snapshotIndex++;  // Move to the next snapshot file
         }
-
-        loadDataFromFile(filename, city);
+    
+        
         plotEnvironmentalTrend(type + " Quality Index Over Time for " + city, values, timestamps);
     }
 
+        
     // Method to determine the filename based on the parameter type
     private String determineFilename(String type) {
         switch (type.toLowerCase()) {
@@ -44,9 +58,22 @@ public class VisualData {
                 return "";
         }
     }
+    private String determineFilename(String type, int index) {
+        switch (type.toLowerCase()) {
+            case "air":
+                return "air_copy_" + index + ".txt";
+            case "water":
+                return "water_copy_" + index + ".txt";
+            case "noise":
+                return "noise_copy_" + index + ".txt";
+            default:
+                return "";
+        }
+    }
 
-    private void loadDataFromFile(String filename, String city) {
+    private boolean loadDataFromFile(String filename, String city) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        boolean dataLoaded = false;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -60,11 +87,13 @@ public class VisualData {
 
                     values.add(value);        // Append new value
                     timestamps.add(timestamp); // Append new timestamp
+                    dataLoaded = true; 
                 }
             }
         } catch (IOException | ParseException e) {
             System.out.println("Error reading snapshot file: " + e.getMessage());
         }
+        return dataLoaded;
     }
 
     // Method to plot environmental data trend (simplified for demonstration)
