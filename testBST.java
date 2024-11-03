@@ -64,6 +64,10 @@ public class testBST {
                 case 7:
                     visualizeEnvironmentalData();
                     break;
+                case 8:
+                    printSelectedTree();
+                    break;
+                    
                 case 0:
                     System.out.println("Exiting...");
                     break;
@@ -87,6 +91,7 @@ public class testBST {
         System.out.println("5. Display Rankings");
         System.out.println("6. Backup data or Restore data");
         System.out.println("7. Visulazie environmental data");
+        System.out.println("8. Print Tree data");
         System.out.println("0. Exit");
         System.out.println("------------------------------------------------------------");
     }

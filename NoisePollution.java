@@ -118,8 +118,13 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
 
     @Override
     public void displayRankings() {
-        System.out.println("Noise Pollution Rankings (Best to Worst):");
-        noisePollutionBST.reverseInorder(); 
+        System.out.println(" Noise Pollution Rankings (Best to Worst):");
+        noisePollutionBST.inorder();
+    }
+
+    public void displayRankingsReverse() {
+        System.out.println("Noise Pollution Rankings (Worst to Best):");
+        noisePollutionBST.reverseInorder();
     }
     public void restoreSnapshot(int snapshotIndex) {
         String filename = "noise_copy" + snapshotIndex + ".txt";
@@ -165,11 +170,6 @@ public class NoisePollution extends EnvironmentalData implements DataOperations 
     public void displayCityAndQI() {
         System.out.println("  City: " + getLocationName());
         System.out.println("  Noise Level: " + getNoiseLevel());
-    }
-
-    public void displayRankingsReverse() {
-        System.out.println("Water Quality Rankings (Best to Worst):");
-        noisePollutionBST.inorder();
     }
 
     public List<Double> getNoiseLevelHistory() {

@@ -154,12 +154,12 @@ public class WaterQuality extends EnvironmentalData implements DataOperations {
     @Override
     public void displayRankings() {
         System.out.println("Water Quality Rankings (Best to Worst):");
-        waterQualityBST.reverseInorder();
+        waterQualityBST.inorder();
     }
 
     public void displayRankingsReverse() {
-        System.out.println("Water Quality Rankings (Best to Worst):");
-        waterQualityBST.inorder();
+        System.out.println("Water Quality Rankings (Worst to Best):");
+        waterQualityBST.reverseInorder();
     }
 
     @Override

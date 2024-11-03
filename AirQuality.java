@@ -122,10 +122,16 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
     public String toString() {
         return "City: " + getLocationName() + ", AQI: " + aqi;
     }
+
     @Override
     public void displayRankings() {
-        System.out.println("Air Quality Rankings (Best to Worst):");
-        airQualityBST.reverseInorder(); 
+        System.out.println(" Noise Pollution Rankings (Best to Worst):");
+        airQualityBST.inorder();
+    }
+
+    public void displayRankingsReverse() {
+        System.out.println("Noise Pollution Rankings (Worst to Best):");
+        airQualityBST.reverseInorder();
     }
     
     public void restoreSnapshot(int snapshotIndex) {
@@ -162,8 +168,6 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         }
     }
     
-
-
     public void saveSnapshot() {
     airQualityBST.saveRotatingSnapshot();
     }
@@ -173,12 +177,6 @@ public class AirQuality extends EnvironmentalData implements DataOperations {
         System.out.println("  City: " + getLocationName());
         System.out.println("  AQI: " + getAqi());
     }
-
-    public void displayRankingsReverse() {
-        System.out.println("Water Quality Rankings (Best to Worst):");
-        airQualityBST.inorder();
-    }
-
     public List<Double> getAqiHistory() {
         return aqiHistory;
     }
