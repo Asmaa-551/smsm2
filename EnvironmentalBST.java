@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class EnvironmentalBST extends BST<EnvironmentalData> {
+    // Static counters keep track of snapshot indices for each data type.
     private static int airSnapshotIndex = 0; 
     private static int waterSnapshotIndex = 0; 
     private static int noiseSnapshotIndex = 0; 
@@ -22,6 +23,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         return searchByLocation(root, location);
     }
 
+    // A method for searching the tree for EnvironmentalData using a location name.
     private EnvironmentalData searchByLocation(TreeNode<EnvironmentalData> node, String location) {
         if (node == null) {
             return null;
@@ -41,11 +43,11 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         return searchByLocation(node.right, location);
     }
 
-    
+    // Method for saving the BST's current state to a snapshot file.
     public void saveRotatingSnapshot() {
         String filename = "";
 
-        
+        // Determine the kind of data in the tree and set the filename appropriately.
         if (root != null && root.element instanceof AirQuality) {
             airSnapshotIndex++;
             filename = "air_copy_" + airSnapshotIndex + ".txt"; 
@@ -60,7 +62,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
             return;
         }
 
-       
+       // Use resources to safely write files.
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             saveSnapshotRec(root, writer); 
         } catch (IOException e) {
@@ -80,12 +82,14 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         return noiseSnapshotIndex;
     }    
 
+    // Recursive helper function for writing tree data to a file during an in-order traverse.
     private void saveSnapshotRec(TreeNode<EnvironmentalData> node, BufferedWriter writer) throws IOException {
         if (node == null) {
             return;
         }
         saveSnapshotRec(node.left, writer);
 
+        // Write data to file based on the kind of environmental data.
         if (node.element instanceof AirQuality) {
             AirQuality airData = (AirQuality) node.element;
             writer.write(airData.getMeasurementTimestamp() + "," + airData.getLocationName() + "," 
@@ -107,7 +111,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         
         saveSnapshotRec(node.right, writer);
     }
-    
+    // Method for restoring data from a specified snapshot.
     public void restoreData() {
         Scanner scanner = new Scanner(System.in);
     
@@ -228,6 +232,7 @@ public class EnvironmentalBST extends BST<EnvironmentalData> {
         node.element.displayCityAndQI();
         inorder(node.right);
     }
+    // Method for collecting all environmental data in the BST into a list.
     public List<EnvironmentalData> getAllData() {
         List<EnvironmentalData> dataList = new ArrayList<>();
         collectAllData(root, dataList); 

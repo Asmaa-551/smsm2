@@ -12,36 +12,34 @@ public class testBST {
     static Scanner scanner = new Scanner(System.in);
     static VisualData visualData = new VisualData(BST);
 
-    // public static void main(String[] args) {
-    // int choice;
 
     public static void main(String[] args) {
-        int choice = -1; // Initialize choice to an invalid value
+        int choice = -1; 
 
         do {
             displayMenu();
             System.out.print("Enter your choice: ");
 
-            // Validate input for choice
+           
             while (true) {
                 try {
                     if (scanner.hasNextInt()) {
                         choice = scanner.nextInt();
-                        break; // Valid input
+                        break; 
                     } else {
                         System.out.println("Invalid input. Please enter a number.");
-                        scanner.next(); // Clear the invalid input
+                        scanner.next(); 
                     }
                 } catch (InputMismatchException e) {
                     System.out.println("Invalid input. Please enter a number.");
-                    scanner.next(); // Clear the invalid input
+                    scanner.next(); 
                 } catch (NoSuchElementException e) {
                     System.out.println("Input stream is closed or has been exhausted.");
-                    return; // Exit the program or handle as needed
+                    return; 
                 }
             }
 
-            // Handle the menu choice
+           
             switch (choice) {
                 case 1:
                     insertNewData();
@@ -76,10 +74,10 @@ public class testBST {
             }
         } while (choice != 0);
 
-        scanner.close(); // Close the scanner when done
+        scanner.close(); 
     }
 
-    // Method to display the menu
+    
     public static void displayMenu() {
         System.out.println("------------------------------------------------------------");
         System.out.println("Environmental Quality Monitoring System");
@@ -96,7 +94,7 @@ public class testBST {
         System.out.println("------------------------------------------------------------");
     }
 
-    // Method for inserting new environmental data
+    
     public static void insertNewData() {
         Scanner scanner = new Scanner(System.in);
         int typeChoice = 0;
@@ -104,7 +102,7 @@ public class testBST {
         System.out.println("1. Manually enter environmental data");
         System.out.println("2. Upload data from file");
         int inputChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine(); 
 
         switch (inputChoice) {
             case 1:
@@ -113,14 +111,14 @@ public class testBST {
                 System.out.println("2. Water Quality");
                 System.out.println("3. Noise Pollution");
                 typeChoice = scanner.nextInt();
-                scanner.nextLine(); // Consume newline after int
+                scanner.nextLine(); 
 
-                if (typeChoice < 1 || typeChoice > 3) { // Corrected validation logic
+                if (typeChoice < 1 || typeChoice > 3) { 
                     System.out.println("Invalid choice, please select between 1 and 3.");
-                    return; // Exit method
+                    return; 
                 }
 
-                // Gather common data for all types, with validation
+                
                 System.out.println("Enter the location name:");
                 String locationName = scanner.nextLine().trim();
                 if (locationName.isEmpty()) {
@@ -128,41 +126,41 @@ public class testBST {
                     return;
                 }
 
-                EnvironmentalData existingData = null; // To hold existing data if found
+                EnvironmentalData existingData = null; 
 
-                // Proceed with the type-specific search based on typeChoice
+               
                 switch (typeChoice) {
-                    case 1: // Air Quality
+                    case 1: 
                         existingData = airClass.search(locationName);
                         break;
-                    case 2: // Water Quality
+                    case 2: 
                         existingData = waterClass.search(locationName);
                         break;
-                    case 3: // Noise Pollution
+                    case 3: 
                         existingData = noiseClass.search(locationName);
                         break;
                 }
 
-                // If data exists, ask if the user wants to update it
+                
                 if (existingData != null) {
                     System.out.println(
                             "Data for " + locationName + " already exists. Would you like to update it? (yes/no)");
                     String response = scanner.nextLine().trim().toLowerCase();
                     if (response.equals("yes")) {
                         double newValue;
-                        if (typeChoice == 1) { // Air Quality
+                        if (typeChoice == 1) { 
                             System.out.println(
                                     "Enter new AQI value (current: " + ((AirQuality) existingData).getAqi() + "): ");
                             newValue = getValidatedIntInput(scanner, "Air Quality Index (0 to 500)", 0, 500);
                             ((AirQuality) existingData).updateMeasurement(newValue);
                             System.out.println("Air Quality data updated successfully!");
-                        } else if (typeChoice == 2) { // Water Quality
+                        } else if (typeChoice == 2) { 
                             System.out.println("Enter new Water Quality Index value (current: "
                                     + ((WaterQuality) existingData).getWaterQualityIndex() + "): ");
                             newValue = getValidatedIntInput(scanner, "Water Quality Index (0 to 100)", 0, 100);
                             ((WaterQuality) existingData).updateMeasurement(newValue);
                             System.out.println("Water Quality data updated successfully!");
-                        } else if (typeChoice == 3) { // Noise Pollution
+                        } else if (typeChoice == 3) { 
                             System.out.println("Enter new Noise Level value (current: "
                                     + ((NoisePollution) existingData).getNoiseLevel() + "): ");
                             newValue = getValidatedDoubleInput(scanner, "Noise Level in decibels (0.0 to 200.0)", 0.0,
@@ -170,18 +168,18 @@ public class testBST {
                             ((NoisePollution) existingData).updateMeasurement(newValue);
                             System.out.println("Noise Pollution data updated successfully!");
                         }
-                        return; // Exit method after updating
+                        return; 
                     } else {
                         System.out.println("Data insertion cancelled.");
-                        return; // Exit method if not updating
+                        return; 
                     }
                 }
 
-                // Get latitude and longitude with validation
+                
                 double latitude = getValidatedDoubleInput(scanner, "latitude (-90 to 90)", -90.0, 90.0);
                 double longitude = getValidatedDoubleInput(scanner, "longitude (-180 to 180)", -180.0, 180.0);
 
-                // Handle the insertion of new data based on the type
+                
                 switch (typeChoice) {
                     case 1: // Air Quality
                         int aqi = getValidatedIntInput(scanner, "Air Quality Index (0 to 500)", 0, 500);
@@ -203,18 +201,18 @@ public class testBST {
                         System.out.println("Noise Pollution data inserted successfully!");
                         break;
                 }
-                break; // End case 1
+                break; 
 
             case 2:
-                // Prompt for filename and load data from file
+                
                 System.out.print("Enter filename to upload data from: ");
                 String filename = scanner.nextLine();
-                if (filename.isEmpty()) { // Validate filename
+                if (filename.isEmpty()) { 
                     System.out.println("Error: Filename cannot be empty.");
                     return;
                 }
                 try {
-                    Data.loadData(filename); // Assume Data.loadData(filename) adds all data to the system
+                    Data.loadData(filename); 
                     System.out.println("Data from file " + filename + " uploaded successfully.");
                 } catch (Exception e) {
                     System.out.println("Error reading file: " + e.getMessage());
@@ -267,17 +265,17 @@ public class testBST {
         return value;
     }
 
-    // Method for updating existing environmental data
+    
     public static void updateData() {
-        // Prompt for type of environmental data (Air, Water, or Noise)
+        
         System.out.println("Choose the data type to update (1: Air Quality, 2: Water Quality, 3: Noise): ");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline character
+        scanner.nextLine();
 
         System.out.println("Enter the location name of the environmental data: ");
         String locationName = scanner.nextLine().trim();
 
-        // Search for existing data based on location name
+        
         EnvironmentalData existingData;
         if (choice == 1) {
             existingData = airClass.search(locationName);
@@ -290,13 +288,13 @@ public class testBST {
             return;
         }
         if (existingData == null) {
-            // If no existing data found, ask user if they want to add it
+           
             System.out.println("No existing data found for " + locationName + ".");
             System.out.println("Would you like to add it? (yes/no)");
             String response = scanner.nextLine().trim().toLowerCase();
 
             if (response.equals("yes")) {
-                // Ask for new latitude and longitude
+                
                 double newLatitude, newLongitude;
 
                 System.out.println("Enter latitude: ");
@@ -304,13 +302,13 @@ public class testBST {
                 System.out.println("Enter longitude: ");
                 newLongitude = scanner.nextDouble();
 
-                // Validate latitude and longitude
+               
                 if (newLatitude < -90 || newLatitude > 90 || newLongitude < -180 || newLongitude > 180) {
                     System.out.println("Invalid latitude or longitude values. Please enter valid coordinates.");
                     return;
                 }
 
-                // Create and insert new data object based on the choice
+                
                 switch (choice) {
                     case 1: // Air Quality
                         System.out.println("Enter AQI value: ");
@@ -354,7 +352,7 @@ public class testBST {
                 return;
             }
         } else {
-            // Existing data found; prompt for AQI update
+            
             double newValue;
             try {
                 switch (choice) {
@@ -409,7 +407,7 @@ public class testBST {
         System.out.println("2. Remove all old environmental data");
 
         int deleteChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline character
+        scanner.nextLine(); 
 
         switch (deleteChoice) {
             case 1:
@@ -423,19 +421,19 @@ public class testBST {
         }
     }
 
-    // Method for deleting environmental data
+    
     public static void deleteDataSpecific() {
         Scanner scanner = new Scanner(System.in);
 
-        // Prompt the user to select the type of data to delete
+      
         System.out.println("Select the type of environmental data to delete:");
         System.out.println("1. Air Quality");
         System.out.println("2. Water Quality");
         System.out.println("3. Noise Pollution");
         int typeChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline after int
+        scanner.nextLine(); 
 
-        // Gather the location name to delete
+        
         System.out.println("Enter the location name to delete:");
         String locationName = scanner.nextLine().trim();
         if (locationName.isEmpty()) {
@@ -443,10 +441,10 @@ public class testBST {
             return;
         }
 
-        // Handle deletion based on the type of data
+        
         switch (typeChoice) {
             case 1: // Air Quality
-                AirQuality airData = (AirQuality) airClass.search(locationName); // Search for existing data
+                AirQuality airData = (AirQuality) airClass.search(locationName); 
                 if (airData != null) {
                     airClass.delete(locationName); // Delete from Air Quality BST
                 } else {
@@ -455,18 +453,18 @@ public class testBST {
                 break;
 
             case 2: // Water Quality
-                WaterQuality waterData = (WaterQuality) waterClass.search(locationName); // Search for existing data
+                WaterQuality waterData = (WaterQuality) waterClass.search(locationName); // Search for  data
                 if (waterData != null) {
-                    waterClass.delete(locationName); // Delete from Water Quality BST
+                    waterClass.delete(locationName); 
                 } else {
                     System.out.println("Water Quality data not found for deletion: " + locationName);
                 }
                 break;
 
             case 3: // Noise Pollution
-                NoisePollution noiseData = (NoisePollution) noiseClass.search(locationName); // Search for existing data
+                NoisePollution noiseData = (NoisePollution) noiseClass.search(locationName); 
                 if (noiseData != null) {
-                    noiseClass.delete(locationName); // Delete from Noise Pollution BST
+                    noiseClass.delete(locationName); 
                 } else {
                     System.out.println("Noise Pollution data not found for deletion: " + locationName);
                 }
@@ -483,7 +481,6 @@ public class testBST {
         String confirmation = scanner.nextLine().trim().toLowerCase();
 
         if (confirmation.equals("yes")) {
-            // Clear data from each class
             airClass.deleteOldData();
             waterClass.deleteOldData();
             noiseClass.deleteOldData();
@@ -495,15 +492,13 @@ public class testBST {
     public static void searchData() {
         Scanner scanner = new Scanner(System.in);
 
-        // Prompt the user to select the type of data to search for
         System.out.println("Select the type of environmental data to search:");
         System.out.println("1. Air Quality");
         System.out.println("2. Water Quality");
         System.out.println("3. Noise Pollution");
         int typeChoice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline after int
+        scanner.nextLine(); 
 
-        // Gather the location name to search for
         System.out.println("Enter the location name to search:");
         String locationName = scanner.nextLine().trim();
         if (locationName.isEmpty()) {
@@ -511,12 +506,10 @@ public class testBST {
             return;
         }
 
-        // Handle search based on the type of data
         switch (typeChoice) {
             case 1: // Air Quality
                 AirQuality airData = (AirQuality) airClass.search(locationName); // Search for existing data
                 if (airData != null) {
-                    // Use the displayInfo method to show air quality data details
                     airData.displayInfo();
                 } else {
                     System.out.println("Air Quality data not found for location: " + locationName);
@@ -526,7 +519,6 @@ public class testBST {
             case 2: // Water Quality
                 WaterQuality waterData = (WaterQuality) waterClass.search(locationName); // Search for existing data
                 if (waterData != null) {
-                    // Use the displayInfo method to show water quality data details
                     waterData.displayInfo();
                 } else {
                     System.out.println("Water Quality data not found for location: " + locationName);
@@ -536,7 +528,6 @@ public class testBST {
             case 3: // Noise Pollution
                 NoisePollution noiseData = (NoisePollution) noiseClass.search(locationName); // Search for existing data
                 if (noiseData != null) {
-                    // Assuming similar displayInfo() method exists in NoisePollution class
                     noiseData.displayInfo();
                 } else {
                     System.out.println("Noise Pollution data not found for location: " + locationName);
@@ -549,7 +540,6 @@ public class testBST {
         }
     }
 
-    // Method for displaying environmental rankings (Best to Worst)
     public static void displayRankings() {
         Scanner scanner = new Scanner(System.in);
 
@@ -557,17 +547,17 @@ public class testBST {
         System.out.println("1. Best to Worst");
         System.out.println("2. Worst to Best");
         int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        scanner.nextLine(); 
 
         switch (choice) {
             case 1:
-                airClass.displayRankings(); // Assuming reverseInorder method exists
+                airClass.displayRankings(); 
                 waterClass.displayRankings();
                 noiseClass.displayRankings();
                 break;
 
             case 2:
-                airClass.displayRankingsReverse(); // Assuming inorder method exists
+                airClass.displayRankingsReverse(); 
                 waterClass.displayRankingsReverse();
                 noiseClass.displayRankingsReverse();
                 break;
@@ -578,7 +568,6 @@ public class testBST {
         }
     }
 
-    // Method for backing up data
     public static void backupData() {
         System.out.println("What type of data do you want to backup?");
         System.out.println("1: Air Quality");
@@ -586,44 +575,37 @@ public class testBST {
         System.out.println("3: Noise Pollution");
         System.out.print("Enter your choice: ");
 
-        // Validate input for choice
-        int choice = -1; // Initialize to an invalid value
+        int choice = -1; 
         while (true) {
             try {
                 choice = scanner.nextInt();
                 if (choice < 1 || choice > 3) {
                     System.out.println("Invalid choice. Please enter 1, 2, or 3.");
                 } else {
-                    break; // Valid input
+                    break; 
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.next(); // Clear the invalid input
+                scanner.next(); 
             }
         }
 
-        // Switch case to handle backup based on user choice
         switch (choice) {
             case 1:
-                // Save Air Quality snapshot if there is data
-                airClass.saveSnapshot();
+               airClass.saveSnapshot();
                 System.out.println("Air Quality data backed up successfully.");
-                break; // Added break statement
+                break; 
 
             case 2:
-                // Save Water Quality snapshot if there is data
                 waterClass.saveSnapshot();
                 System.out.println("Water Quality data backed up successfully.");
-                break; // Added break statement
-
+                break; 
             case 3:
-                // Save Noise Pollution snapshot if there is data
                 noiseClass.saveSnapshot();
                 System.out.println("Noise Pollution data backed up successfully.");
-                break; // Added break statement
+                break; 
 
             default:
-                // This case should not be reached due to validation above
                 System.out.println("An unexpected error occurred.");
                 break;
         }
@@ -648,7 +630,6 @@ public class testBST {
         return aqiArray;
     }
 
-    // Method for restoring data from backup
     public static void restoreData() {
         BST.restoreData();
     }
@@ -657,37 +638,35 @@ public class testBST {
         Scanner scanner = new Scanner(System.in);
         int typeChoice = 0;
 
-        // Prompt the user to select the type of tree to print
         while (true) {
             System.out.println("Select the type of environmental data tree to print:");
             System.out.println("1. Air Quality");
             System.out.println("2. Water Quality");
             System.out.println("3. Noise Pollution");
             typeChoice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline after int
+            scanner.nextLine(); 
 
             if (typeChoice >= 1 && typeChoice <= 3) {
-                break; // Valid choice, exit loop
+                break; 
             } else {
                 System.out.println("Invalid choice. Please select a number between 1 and 3.");
             }
         }
 
-        // Call the print method on the appropriate tree based on the user's choice
         switch (typeChoice) {
             case 1:
                 System.out.println("Printing Air Quality data:");
-                airClass.print(); // Directly call print method for Air Quality
+                airClass.print(); 
                 break;
 
             case 2:
                 System.out.println("Printing Water Quality data:");
-                waterClass.print(); // Directly call print method for Water Quality
+                waterClass.print(); 
                 break;
 
             case 3:
                 System.out.println("Printing Noise Pollution data:");
-                noiseClass.print(); // Directly call print method for Noise Pollution
+                noiseClass.print(); 
                 break;
         }
     }
@@ -698,14 +677,14 @@ public class testBST {
         System.out.println("2. Water Quality Trends");
         System.out.println("3. Noise Pollution Trends");
 
-        int choice = scanner.nextInt(); // Get user input for data type
-        scanner.nextLine(); // Consume newline
+        int choice = scanner.nextInt(); 
+        scanner.nextLine(); 
 
-        // Prompt for city name
+     
         System.out.print("Enter the city name to visualize data for: ");
         String city = scanner.nextLine();
 
-        // Call visualization based on user choice
+
         switch (choice) {
             case 1:
                 System.out.println("Visualizing Air Quality Trends for " + city);
@@ -725,48 +704,41 @@ public class testBST {
         }
     }
 
-    // Method for backing up or restoring data
     public static void backupOrRestoreData() {
         System.out.println("What would you like to do?");
         System.out.println("1: Backup data");
         System.out.println("2: Restore data");
         System.out.print("Enter your choice: ");
 
-        // Validate input for choice
-        int choice = -1; // Initialize to an invalid value
+        int choice = -1; 
         while (true) {
             try {
                 choice = scanner.nextInt();
                 if (choice < 1 || choice > 2) {
                     System.out.println("Invalid choice. Please enter 1 or 2.");
                 } else {
-                    break; // Valid input
+                    break; 
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.next(); // Clear the invalid input
+                scanner.next(); 
             }
         }
 
-        // Handle backup or restore based on user choice
         switch (choice) {
             case 1:
-                // Backup data
-                backupData(); // Call existing backupData method
+                backupData(); 
                 break;
             case 2:
-                // Restore data
-                restoreData(); // Call existing restoreData method
+                restoreData(); 
                 System.out.println("Data restored successfully.");
                 break;
             default:
-                // This case should not be reached due to validation above
                 System.out.println("An unexpected error occurred.");
                 break;
         }
     }
 
-    // Method to handle user input and menu navigation
     public void run() {
         int choice;
         do {
