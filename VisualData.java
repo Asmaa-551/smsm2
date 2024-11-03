@@ -9,38 +9,47 @@ import java.util.List;
 
 public class VisualData {
     private EnvironmentalBST environmentalBST;
-    private List<Double> values = new ArrayList<>();  
-    private List<Date> timestamps = new ArrayList<>(); 
+    private List<Double> values = new ArrayList<>();
+    private List<Date> timestamps = new ArrayList<>();
 
-    
     public VisualData(EnvironmentalBST environmentalBST) {
         this.environmentalBST = environmentalBST;
     }
 
-    
     public void visualizeByCityUsingSnapshot(String city, String type) {
-        int snapshotIndex = 1;  
+        int snapshotIndex;
 
-        
-        while (true) {
-            String filename = determineFilename(type, snapshotIndex);
-    
-            
-            if (filename.isEmpty()) {
+        // Access the appropriate snapshot index directly based on the type
+        switch (type.toLowerCase()) {
+            case "air":
+                snapshotIndex = EnvironmentalBST.getAirSnapshotIndex();
+                break;
+            case "water":
+                snapshotIndex = EnvironmentalBST.getWaterSnapshotIndex();
+                break;
+            case "noise":
+                snapshotIndex = EnvironmentalBST.getNoiseSnapshotIndex();
+                break;
+            default:
                 System.out.println("Invalid type. Please choose 'air', 'water', or 'noise'.");
                 return;
-            }
-    
-            
-            if (!loadDataFromFile(filename, city)) {
-                
-                break;
-            }
-    
-            snapshotIndex++;  
         }
-    
-        
+
+        if (snapshotIndex == 0) {
+            System.out.println("No saved snapshots available for type: " + type);
+            return;
+        }
+
+        // Loop from snapshotIndex down to 1
+        for (int i = snapshotIndex; i > 0; i--) {
+            String filename = determineFilename(type, i);
+
+            if (!loadDataFromFile(filename, city)) {
+                System.out.println("No data found in snapshot " + i + " for the specified city.");
+                continue;
+            }
+        }
+
         plotEnvironmentalTrend(type + " Quality Index Over Time for " + city, values, timestamps);
     }
 
@@ -66,14 +75,13 @@ public class VisualData {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 
-                
                 if (parts.length >= 5 && parts[1].equalsIgnoreCase(city)) {
-                    double value = Double.parseDouble(parts[4]); 
-                    Date timestamp = dateFormat.parse(parts[0]); 
+                    double value = Double.parseDouble(parts[4]);
+                    Date timestamp = dateFormat.parse(parts[0]);
 
-                    values.add(value);        
-                    timestamps.add(timestamp); 
-                    dataLoaded = true; 
+                    values.add(value);
+                    timestamps.add(timestamp);
+                    dataLoaded = true;
                 }
             }
         } catch (IOException | ParseException e) {
@@ -82,7 +90,6 @@ public class VisualData {
         return dataLoaded;
     }
 
-   
     private void plotEnvironmentalTrend(String title, List<Double> values, List<Date> timestamps) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Plotting " + title);

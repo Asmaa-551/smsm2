@@ -1,0 +1,6 @@
+Air,Dubai,34.0522,-118.2437,50
+Noise,Abu Dhabi,34.0522,-118.2437,70.5
+water,Dubai,40.7128,-74.0060,40
+Air,Abu Dhabi,40.7128,-74.0060,55.2
+Noise,Dubai,37.7749,-122.4194,80
+Water,Abu Dhabi,37,34,12
